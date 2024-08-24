@@ -17,7 +17,8 @@ This involves:
 
 Managing temporary access to your files while sharing with multiple people presents a big challenge when you try to scale.
 - Redundant files are created even if they're never accessed
-- 
+- Manual process to encrypt and share files
+- Replay attacks are possible for simple access control systems
 
 ![MultiShare](/readme_img/readme_multishare.png)
 
@@ -28,5 +29,5 @@ To solve for these issues, we've created a trustless time-based access control s
 - Sharers create a time-based access control passes to share their files with others
 - Consumers present their passes to access the content
 
-![MultiShare](/readme_img/readme_store_share.png)
-![MultiShare](/readme_img/readme_distribution.png)
+![Store and Share](/readme_img/readme_store_share.png)
+![Distribution](/readme_img/readme_distribution.png)
