@@ -1,59 +1,101 @@
 require('dotenv').config()
-console.log("Creating Attestation");
-
+const { decodeAbiParameters } = require("viem");
 const { SignProtocolClient, SpMode, EvmChains, IndexService } = require("@ethsign/sp-sdk");
 const { privateKeyToAccount } = require("viem/accounts");
 
 // Set up Wallet
 const privateKey = process.env.PRIVATE_KEY_1;
 const client = new SignProtocolClient(SpMode.OnChain, {
-  chain: EvmChains.polygonAmoy,
-  account: privateKeyToAccount(privateKey), // Optional, depending on environment
+    chain: EvmChains.polygonAmoy,
+    account: privateKeyToAccount(privateKey), // Optional, depending on environment
 });
 
+const schemaId = "onchain_evm_80002_0x16";
+const serviceType = "testnet";
+
+// Retrieve all attestations by recipient
+// Bob wants to see all the attestations that he has received.
 const fetchAttestationByRecipient = async ({
     page,
     recipient
-}) => {    
+}) => {
     console.log("Fetching Attestation by Recipient");
     console.log(recipient);
-    
-    const indexService = new IndexService("testnet");
+
+    const indexService = new IndexService(serviceType);
     const res = await indexService.queryAttestationList({
-        // schemaId: '0x16', // This does not seem to be work properly. Using indexing value instead.
-        page: page,        
+        schemaId: schemaId,
+        page: page,
         indexingValue: recipient,
     });
-    console.log(res);
+
+    return {
+        ...res,
+        rows: await transformDataArray(res.rows)
+    }
+
 }
 
+
+// Retrieve all attestations by attester
+// Alice wants to see all the attestations that she has issued.
+const fetchAttestationByAttester = async ({
+    page,
+    attester
+}) => {
+    console.log("Fetching Attestation by Attester");
+    console.log(attester);
+
+    const indexService = new IndexService(serviceType);
+    const res = await indexService.queryAttestationList({
+        schemaId: schemaId,
+        page: page,
+        attester: attester,
+    });
+
+    return {
+        ...res,
+        rows: await transformDataArray(res.rows)
+    }
+}
+
+
+// The data field in the attestation object is encoded in ABI format.
+// This function decodes the data field using viem's decodeAbiParameters() function.
+const transformDataArray = async (attestationList) => {
+    return await Promise.all(
+        attestationList.map(
+            async (att) => {
+                return await decodeData(att);
+            }
+        )
+    );
+}
+
+const decodeData = async (att) => {
+    if (!att.data) return att;
+    const data = decodeAbiParameters(
+        att.schema.data,
+        att.data
+    );
+    return {
+        ...att,
+        data,
+    };
+}
+
+// Test the functions
 fetchAttestationByRecipient({
     recipient: process.env.PUBLIC_KEY_2,
     page: 1
 })
-
-const fetchAttestationByAttester = async ({
-    page,
-    attester
-}) => {    
-    console.log("Fetching Attestation by Attester");
-    console.log(attester);
-    
-    const indexService = new IndexService("testnet");
-    const res = await indexService.queryAttestationList({
-        // schemaId: '0x16', // This does not seem to be work properly. Using indexing value instead.
-        page: page,        
-        attester: attester,
-    });
-    console.log(res);
-}
 
 fetchAttestationByAttester({
     attester: process.env.PUBLIC_KEY_1,
     page: 1
 })
 
-// Output:
+// Example Output:
 // {
 //     total: 3,
 //     rows: [
