@@ -1,0 +1,1 @@
+export type Handler<TParameter = unknown> = (value?: TParameter) => void;
