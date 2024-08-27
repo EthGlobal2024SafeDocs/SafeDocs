@@ -2,18 +2,21 @@ import styles from './Title.module.css'
 
 type TitleProps = {
   label: string;
-  text?: string;
+  labelBold?: string;
+  tag?: 'h1' | 'h2' | 'h4';
 }
 
 const Title = ({
   label,
-  text,
+  labelBold,
+  tag = 'h1',
 }: TitleProps) => {
+  const Tag = tag;
   return (
-    <h2 className={styles.title}>
+    <Tag className={styles.title}>
       {label}
-      {text ? `<b><i>${text}</i></b>` : ''}
-    </h2>
+      {labelBold ? <b><i>{labelBold}</i></b> : ''}
+    </Tag>
   );
 };
 
