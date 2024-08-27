@@ -1,8 +1,9 @@
-import { Formik, Form, FormikProps, useField } from 'formik';
+import { Formik, Form, FormikProps } from 'formik';
 import * as Yup from 'yup';
 import styles from './LoginForm.module.css';
 import { Handler } from '../../../shared/types/components';
 import Button from '../../atoms/Button/Button';
+import InputText from '../../molecules/InputText/InputText';
 
 const LoginSchema = Yup.object().shape({
   username: Yup.string().required('Username is required'),
@@ -13,40 +14,6 @@ export interface LoginValues {
   username: string;
   pin: string;
 }
-
-type InputTextProps = {
-  label: string;
-  name: string;
-  ariaLabel: string;
-  type?: string;
-  placeholder: string;
-}
-
-const InputText = ({
-  label,
-  name,
-  ariaLabel,
-  type,
-  placeholder,
-}: InputTextProps) => {
-  const [field, meta] = useField(name);
-  return (
-    <div className={styles.inputWrapper}>
-      <span className={styles.label}>{label}</span>
-      <input
-        {...field}
-        aria-label={ariaLabel}
-        name={field.name}
-        type={type}
-        placeholder={placeholder}
-        className={styles.inputText}
-      />
-      {meta.touched && meta.error ? (
-        <div className={styles.errorMessage}>{meta.error}</div>
-      ) : null}
-    </div>
-  );
-};
 
 type SignupFormProps = {
   onSubmit?: Handler<LoginValues>;

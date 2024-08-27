@@ -1,7 +1,7 @@
 .signupFormWrapper {
   display: flex;
   flex-direction: column;
-  width: 532px;
+  width: 580px;
   gap: 24px;
 }
 
@@ -20,33 +20,4 @@
   flex-direction: row;
   justify-content: space-between;
   padding: 0 28px;
-}
-
-.inputWrapper {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
-  height: 28px;
-  font-size: 16px;
-}
-
-.label {
-  width: 100px;
-  min-width: 96px;
-  font-weight: 500;
-  font-size: inherit;
-}
-
-.inputText {
-  background-color: white;
-  color: black;
-  width: 220px;
-  border-radius: 8px;
-  height: 28px;
-  font-size: inherit;
-}
-
-.errorMessage {
-  color: #ff8000;
 }
