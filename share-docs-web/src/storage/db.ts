@@ -7,7 +7,7 @@ class Database extends Dexie {
   constructor() {
     super('share-docs-database');
     this.version(1).stores({
-      users: 'username, email',
+      users: '&username, &email',
     });
   }
 }

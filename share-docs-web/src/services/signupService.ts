@@ -1,11 +1,21 @@
 import { User } from "../models/user";
 import Database from '../storage/db'
 
+export const userExists = async (user: User): Promise<boolean> => {
+  const foundUsers: User[]= await Database.users
+    .where('username')
+    .anyOfIgnoreCase(user.username)
+    .or('email')
+    .anyOfIgnoreCase(user.email)
+    .toArray();
+  return foundUsers.length > 0;
+}
+
 export const signupUser = async (user: User): Promise<boolean> => {
-  const foundUser: User | undefined = await Database.users.get(user.username);
-  if (foundUser) {
+  const exists = await userExists(user);
+  if (exists) {
     return false;
   }
-  Database.users.put(user);
-  return true;
+  const result = await Database.users.put(user);
+  return result === user.username;
 };
