@@ -21,11 +21,11 @@ const WelcomeContainer = ({
   const handleSignUpClick = () => {
     onSignUpClick?.();
   }
-  const titleBold = PageType.Login === pageType ? "back" : "";
+  // const titleBold = PageType.Login === pageType ? "back" : "";
 
   return (
     <div className={styles.contentWrapper}>
-      <Title label="Welcome" labelBold={titleBold} />
+      <Title label="Welcome" />
       <div className={styles.buttons}>
         <Button
           disabled={PageType.Welcome !== pageType}

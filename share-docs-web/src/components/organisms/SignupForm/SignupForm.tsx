@@ -4,6 +4,7 @@ import styles from './SignupForm.module.css';
 import { Handler } from '../../../shared/types/components';
 import Button from '../../atoms/Button/Button';
 import InputText from '../../molecules/InputText/InputText';
+import Title from '../../atoms/Title/Title';
 
 const SignupSchema = Yup.object().shape({
   username: Yup.string().required('Username is required'),
@@ -33,7 +34,7 @@ type SignupFormProps = {
 const SignupForm = ({ onSubmit, onCancel }: SignupFormProps) => {
   return (
     <div className={styles.signupFormWrapper}>
-      <h2>SignUp</h2>
+      <Title label="SignUp" tag="h2" />
       <Formik
         initialValues={{
           username: '',
