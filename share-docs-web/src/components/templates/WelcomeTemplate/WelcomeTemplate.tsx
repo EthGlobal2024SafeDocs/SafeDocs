@@ -31,7 +31,7 @@ const WelcomeTemplate = () => {
 
   return (
     <>
-      <WelcomeContainer pageType={pageType} onLoginClick={loginClick} onSignUpClick={signUpClick} />
+      {pageType === PageType.Welcome && <WelcomeContainer pageType={pageType} onLoginClick={loginClick} onSignUpClick={signUpClick} />}
       {pageType === PageType.Login && <LoginForm onSubmit={onLogin} onCancel={onCancel} />}
       {pageType === PageType.SignUp && <SignupForm onSubmit={onSignUp} onCancel={onCancel}/>}
     </>
