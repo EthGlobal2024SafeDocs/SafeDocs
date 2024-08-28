@@ -4,6 +4,7 @@ import { Response } from "express";
 import { Request } from "express-jwt";
 import { collections } from "../../services/database.services";
 import { ObjectId } from "mongodb";
+import Document from "../../models/document";
 
 export const ReturnDocumentHandler = async (req: Request, res: Response) => {
   // Get sub from auth
@@ -23,13 +24,15 @@ export const ReturnDocumentHandler = async (req: Request, res: Response) => {
   const document = await collections.documents?.findOne({
     wallet_id: new ObjectId(sub),
     _id: new ObjectId(documentId)
-});
+  }) as Document;
 
   if(!document) {
     console.log("document doesn't exist", req.body);
     res.status(400).send("Invalid request!");
     return;
   }
+
+  // RE-ENCRYPTION
 
   res.status(200).send(document);
 };

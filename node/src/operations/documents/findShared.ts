@@ -4,13 +4,16 @@ import { Response } from "express";
 import { Request } from "express-jwt";
 import { collections } from "../../services/database.services";
 import { ObjectId } from "mongodb";
+import Document from "../../models/document";
+import Share from "../../models/share";
+import Wallet from "../../models/wallet";
 
 export const FindSharedDocumentHandler = async (req: Request, res: Response) => {
   // Get sub from auth
   const { sub } = req.auth!;
 
   // Check if wallet exists
-  const wallet = await collections.wallets?.findOne({ _id: new ObjectId(sub) });
+  const wallet = await collections.wallets?.findOne({ _id: new ObjectId(sub) }) as Wallet;
 
   if (!wallet) {
     console.log("error body is null:", req.body);
@@ -28,7 +31,7 @@ export const FindSharedDocumentHandler = async (req: Request, res: Response) => 
         { wallet_id: new ObjectId(sub) },
         { valid_until: { $gt: currentTime } }
         ] }, { batchSize: 1000 })
-    .toArray();
+    .toArray() as Array<Share>;
 
   // Check if documents are expired and map to documents
 
