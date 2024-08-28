@@ -9,6 +9,9 @@ import { DocumentTypesHandler } from "./operations/documents/types";
 import { CreateDocumentHandler } from "./operations/documents/create";
 import { FindDocumentHandler } from "./operations/documents/find";
 import { ShareDocumentHandler } from "./operations/documents/share";
+import { FindSharedDocumentHandler } from "./operations/documents/findShared";
+import { CreateSchemaHandler } from "./operations/schemas/create";
+import { ReturnDocumentHandler } from "./operations/documents/return";
 
 dotenv.config();
 
@@ -34,8 +37,15 @@ connectToDatabase()
     app.get("/documents/types", DocumentTypesHandler);
     app.post("/documents", ExpressJwt(), CreateDocumentHandler);
     app.get("/documents", ExpressJwt(), FindDocumentHandler);
-    app.post('/documents/:documentId/share', ExpressJwt(), ShareDocumentHandler)
-    
+    app.post(
+      "/documents/:documentId/share",
+      ExpressJwt(),
+      ShareDocumentHandler
+    );
+    app.get("/documents/shared", ExpressJwt(), FindSharedDocumentHandler);
+    app.get("/documents/:documentId", ExpressJwt(), ReturnDocumentHandler);
+
+    app.post("/schemas", ExpressJwt(), CreateSchemaHandler);
 
     // END OF API routes
     app.listen(port, () => {

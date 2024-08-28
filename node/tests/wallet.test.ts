@@ -46,7 +46,8 @@ describe("wallet", () => {
 
     const account = privateKeyToAccount(sk_acc);
 
-    console.log('private key hex:', toHex(sk_A))
+    console.log("pk length: ", kp_A.get_private_key().to_bytes().length);
+    console.log("private key hex:", sk_A);
 
     const data = "test data";
     const x = PRE.encryptData(pk_A, data);
@@ -113,11 +114,11 @@ describe("wallet", () => {
       signature
     });
 
-    const isVerified=await verifyMessage({
+    const isVerified = await verifyMessage({
       address: publicKeyToAddress(publicKey),
       message: message,
       signature
-    })
+    });
 
     expect(publicKey).toBe(account.publicKey);
     expect(isVerified).toBe(true);

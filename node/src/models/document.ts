@@ -8,5 +8,3 @@ export default class Document {
     public _id?: ObjectId
   ) {}
 }
-
-

@@ -2,7 +2,9 @@
 
 import { Request, Response } from "express";
 
-export const DocumentTypes = "DriversLicense";
+export enum DocumentTypes {
+  DriversLicense = "DriversLicense"
+}
 
 export const DocumentTypesHandler = async (req: Request, res: Response) => {
   // Check if request is null
@@ -12,6 +14,8 @@ export const DocumentTypesHandler = async (req: Request, res: Response) => {
     return;
   }
 
+  const values: Array<DocumentTypes> = [DocumentTypes.DriversLicense];
+
   // Return types with 200 network status
-  res.status(200).send(Object.keys(DocumentTypes));
+  res.status(200).send(values);
 };

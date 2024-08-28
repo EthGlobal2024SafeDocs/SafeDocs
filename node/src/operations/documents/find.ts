@@ -22,7 +22,5 @@ export const FindDocumentHandler = async (req: Request, res: Response) => {
     ?.find({ wallet_id: new ObjectId(sub) }, { batchSize: 1000 })
     .toArray();
 
-  // Check if no owned or shared documents
-
   res.status(200).send(documents);
 };
