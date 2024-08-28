@@ -1,5 +1,6 @@
 import * as mongoDB from "mongodb";
 import * as dotenv from "dotenv";
+import Wallet from "../models/wallet";
 
 export const collections: {
   wallets?: mongoDB.Collection;
@@ -9,7 +10,7 @@ export const collections: {
 export async function connectToDatabase() {
   dotenv.config();
 
-  const client: mongoDB.MongoClient = new mongoDB.MongoClient('mongodb://localhost:27017');
+  const client: mongoDB.MongoClient = new mongoDB.MongoClient(process.env.DB_CONN_STRING!);
 
   await client.connect();
 

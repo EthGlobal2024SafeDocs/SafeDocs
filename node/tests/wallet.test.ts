@@ -46,6 +46,8 @@ describe("wallet", () => {
 
     const account = privateKeyToAccount(sk_acc);
 
+    console.log('private key hex:', toHex(sk_A))
+
     const data = "test data";
     const x = PRE.encryptData(pk_A, data);
     const y = PRE.decryptData(sk_A, x);

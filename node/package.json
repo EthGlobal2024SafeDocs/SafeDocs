@@ -21,9 +21,11 @@
     "eccrypto": "^1.1.6",
     "elliptic": "^6.5.7",
     "express": "^4.19.2",
+    "express-jwt": "^8.4.1",
     "js-sha256": "^0.11.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.8.0",
+    "postmark": "^4.0.5",
     "sha256": "^0.2.0",
     "viem": "^2.20.0"
   },
