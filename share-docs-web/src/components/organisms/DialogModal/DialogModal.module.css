@@ -1,0 +1,12 @@
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  color: rgb(36, 33, 33);
+}
+
+.button {
+  color: white;
+}
