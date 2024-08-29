@@ -1,92 +1,104 @@
-import { Response } from "express";
-import { Request } from "express-jwt";
-import { collections } from "../../services/database.services";
-import { ObjectId } from "mongodb";
-import { ShareDocument, GetAttestation } from "../../services/sign-protocol";
-import Share from "../../models/share";
+// /documents/:documentId/share
 
-import {
-  SignProtocolClient,
-  SpMode,
-  EvmChains,
-  DataLocationOnChain
-} from "@ethsign/sp-sdk";
+import { Response } from 'express';
+import { Request } from 'express-jwt';
+import { collections } from '../../services/database.services';
+import { ObjectId } from 'mongodb';
+import { publicKeyToAddress } from 'viem/accounts';
+import { ShareDocument, GetAttestation } from '../../services/sign-protocol';
+import Share from '../../models/share';
+import Document from '../../models/document';
+import Wallet from '../../models/wallet';
+import { Hex } from 'viem';
 
 export type ShareRequest = {
-  email: string;
-  expiry: number;
-  proxyKey: string;
+    email: string;
+    expiry: number;
+    proxyKey: string;
 };
 
 export const ShareDocumentHandler = async (req: Request, res: Response) => {
-  if (!req.body) {
-    console.log("error body is null:", req.body);
-    res.status(400).send("Invalid request!");
-    return;
-  }
+    if (!req.body) {
+        console.log('error body is null:', req.body);
+        res.status(400).send('Invalid request!');
+        return;
+    }
 
-  const request: ShareRequest = req.body;
+    const request: ShareRequest = req.body;
 
-  // check if we have a wallet with this email address
+    // check if we have a wallet with this email address
 
-  const recipientWallet = await collections.wallets?.findOne({
-    email: request.email
-  });
+    const recipientWallet = await collections.wallets?.findOne<Wallet>({
+        email: request.email,
+    });
 
-  if (!recipientWallet) {
-    console.log("unable to find recipient email:", request.email);
-    res.status(400).send("Invalid request!");
-    return;
-  }
+    if (!recipientWallet) {
+        console.log('unable to find recipient email:', request.email);
+        res.status(400).send('Invalid request!');
+        return;
+    }
 
-  // make sure proxy key is not null or empty
+    // make sure proxy key is not null or empty
 
-  if(!request.proxyKey) {
-    console.log("proxy key given was null or empty:", request.proxyKey);
-    res.status(400).send("Invalid request!");
-    return;
-  }
+    if (!request.proxyKey) {
+        console.log('proxy key given was null or empty:', request.proxyKey);
+        res.status(400).send('Invalid request!');
+        return;
+    }
 
-  const { sub } = req.auth!;
-  const { documentId } = req.params;
+    const { sub } = req.auth!;
+    const { documentId } = req.params;
 
-  const document = await collections.documents?.findOne({
-    wallet_id: new ObjectId(sub),
-    _id: new ObjectId(documentId)
-  });
+    // Get owner's wallet address using document's wallet_id
+    const owner = await collections.wallets?.findOne({
+        _id: new ObjectId(sub),
+    });
 
-  if (!document) {
-    console.log("document doesn't exist", req.body);
-    res.status(400).send("Invalid request!");
-    return;
-  }
+    if (!owner) {
+        console.log("unable to find document's owner", documentId);
+        res.status(400).send('Invalid request!');
+        return;
+    }
 
-  // Get owner's wallet address using document's wallet_id
-  const ownerAddress = await collections.wallets?.findOne({
-    _id: new ObjectId(sub)
-  });
+    const document = await collections.documents?.findOne<Document>({
+        wallet_id: new ObjectId(sub),
+        _id: new ObjectId(documentId),
+    });
 
-  if (!ownerAddress) {
-    console.log("unable to find document's owner", document);
-    res.status(400).send("Invalid request!");
-    return;
-  }
+    if (!document) {
+        console.log("document doesn't exist", req.body);
+        res.status(404).send('Document not found!');
+        return;
+    }
 
-  // Create attestation with Sign protocol
-  const shared = await ShareDocument(ownerAddress.publicKey, document.document_type, document._id.toString(), request.proxyKey, request.expiry, request.email);
-  const attestationId = shared.attestationId;
+    // Create attestation with Sign protocol
 
-  const attestation = await GetAttestation(attestationId);
+    const expiry_in_unix_time = Math.round((Date.now() / 1000) + request.expiry);
 
-  // Upload instance of share into db
-  const result = await collections.shared?.insertOne({
-    attestation_id: attestationId,
-    valid_until: attestation.validUntil,
-    document_id: document._id,
-    wallet_id: recipientWallet._id
-  } as Share);
+    const recipientAddress = publicKeyToAddress(recipientWallet.public_key as Hex);
 
-  // Send email to intended recipient
+    const shared = await ShareDocument(
+        owner.publicKey,
+        document.document_type,
+        document._id!.toString(),
+        request.proxyKey,
+        expiry_in_unix_time,
+        recipientAddress
+    );
+    const { attestationId } = shared;
 
-  res.status(200).send(result);
+    const attestation = await GetAttestation(attestationId);
+
+    // Upload instance of share into db
+    const result = await collections.shared?.insertOne({
+        attestation_id: attestationId,
+        valid_until: attestation.validUntil,
+        document_id: document._id,
+        wallet_id: owner._id,
+        recipient_wallet_id: recipientWallet._id,
+    } as Share);
+
+    // Send email to intended recipient
+
+    res.status(200).send({ _id: result?.insertedId });
 };
