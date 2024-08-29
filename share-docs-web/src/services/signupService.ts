@@ -1,20 +1,15 @@
 import { User } from "../models/user";
 import Database from '../storage/db'
-// import { Proxy } from '../lib';
-// import * as ReferenceName from "../lib";
-// import { privateKeyToAccount } from "viem/accounts";
-// import { createWalletClient, http, toHex } from "viem";
-// import { mainnet } from "viem/chains";
-// import cryptoStuff from '../lib';
-// import { Proxy } = require('../lib');
-// const foo = require("../lib");
+import { privateKeyToAccount } from "viem/accounts";
+import { createWalletClient, http, toHex } from "viem";
+import { mainnet } from "viem/chains";
 
 export const getSignature = async () => {
   // Step 1. - create Wallet -
   // Run following code until success
   // debugger
-  // const kp_A = ReferenceName.Proxy.generate_key_pair();
-  // const sk_A = ReferenceName.Proxy.to_hex(kp_A.get_private_key().to_bytes());
+  // const kp_A = Proxy.generate_key_pair();
+  // const sk_A = Proxy.to_hex(kp_A.get_private_key().to_bytes());
   // const pk_A = Proxy.to_hex(kp_A.get_public_key().to_bytes());
   // console.log(`1 - ${sk_A} - 2 - ${pk_A}`);
   // const sk_acc = toHex(kp_A.get_private_key().to_bytes());
