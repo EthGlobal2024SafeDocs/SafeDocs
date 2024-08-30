@@ -10,6 +10,7 @@ import Share from '../../models/share';
 import Document from '../../models/document';
 import Wallet from '../../models/wallet';
 import { Hex } from 'viem';
+import { SendShareEmail } from '../../services/email';
 
 export type ShareRequest = {
     email: string;
@@ -50,7 +51,7 @@ export const ShareDocumentHandler = async (req: Request, res: Response) => {
     const { documentId } = req.params;
 
     // Get owner's wallet address using document's wallet_id
-    const owner = await collections.wallets?.findOne({
+    const owner = await collections.wallets?.findOne<Wallet>({
         _id: new ObjectId(sub),
     });
 
@@ -78,7 +79,7 @@ export const ShareDocumentHandler = async (req: Request, res: Response) => {
     const recipientAddress = publicKeyToAddress(recipientWallet.public_key as Hex);
 
     const shared = await ShareDocument(
-        owner.publicKey,
+        owner.public_key as Hex,
         document.document_type,
         document._id!.toString(),
         request.proxyKey,
@@ -99,6 +100,8 @@ export const ShareDocumentHandler = async (req: Request, res: Response) => {
     } as Share);
 
     // Send email to intended recipient
+
+    await SendShareEmail(owner.email, recipientWallet.email);
 
     res.status(200).send({ _id: result?.insertedId });
 };
