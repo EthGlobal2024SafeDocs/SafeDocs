@@ -14,6 +14,7 @@ import { CreateSchemaHandler } from './operations/schemas/create';
 import { GetDocumentHandler } from './operations/documents/document';
 import { GetPublicKeyHandler } from './operations/email';
 import { GenerateProxyKeyHandler } from './operations/proxy';
+import { GetSharedDocumentHandler } from './operations/documents/documentShared';
 
 dotenv.config();
 
@@ -42,6 +43,7 @@ connectToDatabase()
         app.post('/documents/:documentId/share', ExpressJwt(), ShareDocumentHandler);
         app.get('/documents/shared', ExpressJwt(), FindSharedDocumentHandler);
         app.get('/documents/:documentId', ExpressJwt(), GetDocumentHandler);
+        app.get('/documents/shared/:attestationId', ExpressJwt(), GetSharedDocumentHandler);
 
         app.get('/publicKeys/:email', ExpressJwt(), GetPublicKeyHandler);
 

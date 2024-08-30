@@ -60,16 +60,16 @@ describe('working with documents', () => {
     it('share document with Bob', () => {});
 
     it('find all attestation for bob', async () => {
-        // const bobPk = Proxy.private_key_from_bytes(Proxy.from_hex(bob_pk));
+        const bobPk = Proxy.private_key_from_bytes(Proxy.from_hex(bob_pk));
 
-        // const address = publicKeyToAddress(toHex(bobPk.get_public_key().to_bytes()));
+        const address = publicKeyToAddress(toHex(bobPk.get_public_key().to_bytes()));
 
-        // const indexService = new IndexService('testnet');
-        // const attestations = await indexService.queryAttestationList({
-        //     indexingValue: address,
-        //     page: 1,
-        // });
+        const indexService = new IndexService('testnet');
+        const attestations = await indexService.queryAttestationList({
+            indexingValue: address,
+            page: 1,
+        });
 
-        // console.log('attestations', attestations);
+        console.log('attestations', attestations);
     });
 });

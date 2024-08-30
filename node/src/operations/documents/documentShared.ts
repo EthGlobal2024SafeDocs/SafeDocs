@@ -23,20 +23,20 @@ export const GetSharedDocumentHandler = async (req: Request, res: Response) => {
     }
 
     // Get document from attestation id
-    const shared = (await collections.shared?.findOne({
+    const shared = await collections.shared?.findOne<Share>({
         attestation_id: attestationId,
-        wallet_id: sub,
-    })) as Share;
+        recipient_wallet_id: new ObjectId(sub),
+    });
 
     // Check if attestation exists
     if (!shared) {
-        console.log("attestation doesn't exist", req.body);
+        console.log("attestation doesn't exist", attestationId, sub);
         res.status(400).send('Invalid request!');
         return;
     }
 
     // Check if attestation is expired
-    if (Date.now() > shared.valid_until) {
+    if (Date.now() / 1000 > shared.valid_until) {
         console.log('attestation has expired', req.body);
         res.status(400).send('Invalid request!');
         return;
@@ -49,7 +49,7 @@ export const GetSharedDocumentHandler = async (req: Request, res: Response) => {
     });
 
     // Check if document doesn't exist
-    if(!document) {
+    if (!document) {
         console.log("Document doesn't exist", req.body);
         res.status(404).send("Document doesn't exist!");
         return;
@@ -61,7 +61,10 @@ export const GetSharedDocumentHandler = async (req: Request, res: Response) => {
     let v = document!.payload;
     PRE.reEncryption(proxy, v);
 
-    const docs =  { ...document, payload: { ...v } };
+    const { attestation_id } = shared;
+    const { _id: document_id, document_type } = document;
 
-    res.status(200).send(document);
+    const doc = { attestation_id, document_id, document_type, payload: { ...v } };
+
+    res.status(200).send(doc);
 };

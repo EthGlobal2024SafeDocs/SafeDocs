@@ -15,8 +15,8 @@ describe("sending an email using postmark", () => {
             "TextBody": "Hi Broden, it's Broden testing using Postmark to send an email."
         });
 
-        const { Message } = sentEmail;
+        const { Message:message } = sentEmail;
 
-        expect(Message).toBe('OK');
+        expect(message).toBe('OK');
     });
 });

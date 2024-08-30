@@ -70,7 +70,9 @@ export const FindSharedDocumentHandler = async (req: Request, res: Response) => 
             let v = d.payload;
             PRE.reEncryption(proxy, v);
 
-            return { ...d, payload: { ...v } };
+            const { document_type, _id: document_id } = d;
+            const { attestation_id } = latest;
+            return { attestation_id, document_type, document_id, payload: { ...v } };
         })
     );
 
