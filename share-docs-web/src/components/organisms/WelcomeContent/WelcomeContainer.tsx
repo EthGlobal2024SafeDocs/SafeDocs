@@ -21,7 +21,6 @@ const WelcomeContainer = ({
   const handleSignUpClick = () => {
     onSignUpClick?.();
   }
-  // const titleBold = PageType.Login === pageType ? "back" : "";
 
   return (
     <div className={styles.contentWrapper}>

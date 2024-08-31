@@ -5,3 +5,7 @@ export enum PageType {
   Login,
   SignUp
 }
+
+export enum DocumentTypes {
+  DriversLicense = "DriversLicense"
+}

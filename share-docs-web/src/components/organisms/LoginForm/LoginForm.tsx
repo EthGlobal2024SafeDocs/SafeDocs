@@ -8,12 +8,12 @@ import Title from '../../atoms/Title/Title';
 
 const LoginSchema = Yup.object().shape({
   username: Yup.string().required('Username is required'),
-  pin: Yup.string().length(6).required('Pin is required')
+  // pin: Yup.string().length(6).required('Pin is required')
 });
 
 export interface LoginValues {
   username: string;
-  pin: string;
+  // pin: string;
 }
 
 type SignupFormProps = {
@@ -46,13 +46,13 @@ const SignupForm = ({ onSubmit, onCancel }: SignupFormProps) => {
               type="text"
               label="Username:"
             />
-            <InputText
+            {/* <InputText
               ariaLabel="Pin"
               name="pin"
               placeholder="******"
               type="password"
               label="Pin:"
-            />
+            /> */}
             <div className={styles.buttons}>
               <Button type="submit">Login</Button>
               <Button type="button" onClick={() => onCancel?.()}>Cancel</Button>

@@ -11,19 +11,19 @@ const SignupSchema = Yup.object().shape({
   email: Yup.string()
     .email('Invalid email')
     .required('Email is required'),
-  pin: Yup.string().length(6).required('Pin is required'),
-  pinConfirm: Yup.string().length(6).required('Confirming Pin is required')
-    // .test('pin-match', 'Pin must match', function(value) {
-    //   return this.parent.pin === value
-    // })
-    .oneOf([Yup.ref('pin')], 'Pin must match')
+  // pin: Yup.string().length(6).required('Pin is required'),
+  // pinConfirm: Yup.string().length(6).required('Confirming Pin is required')
+  //   // .test('pin-match', 'Pin must match', function(value) {
+  //   //   return this.parent.pin === value
+  //   // })
+  //   .oneOf([Yup.ref('pin')], 'Pin must match')
 });
 
 export interface SignupValues {
   username: string;
   email: string;
-  pin: string;
-  pinConfirm: string;
+  // pin: string;
+  // pinConfirm: string;
 }
 
 type SignupFormProps = {
@@ -65,7 +65,7 @@ const SignupForm = ({ onSubmit, onCancel }: SignupFormProps) => {
               type="email"
               label="Email:"
             />
-            <InputText
+            {/* <InputText
               ariaLabel="Pin"
               name="pin"
               placeholder="******"
@@ -78,7 +78,7 @@ const SignupForm = ({ onSubmit, onCancel }: SignupFormProps) => {
               placeholder="******"
               type="password"
               label="Re-Enter Pin:"
-            />
+            /> */}
             <div className={styles.buttons}>
               <Button type="submit">SignUp</Button>
               <Button type="button" onClick={() => onCancel?.()}>Cancel</Button>

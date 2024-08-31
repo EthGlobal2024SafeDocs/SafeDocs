@@ -1,16 +1,15 @@
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import { Handler } from '../../../shared/types/components';
 import Button from '../../atoms/Button/Button';
 
 import styles from './DialogModal.module.css';
-// import Title from '../../atoms/Title/Title';
+import Title from '../../atoms/Title/Title';
 
 const style = {
   position: 'absolute',
-  borderRadius: '18px',
+  borderRadius: '14px',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
@@ -56,18 +55,9 @@ const DialogModal = ({
           <Box sx={style}>
             <div className={styles.contentWrapper}>
               {title && (
-                <>
-                {/* <Title tag='h2' label={title} /> */}
-                <Typography id="transition-modal-title" variant="h6" component="h2">
-                  {title}
-                </Typography>
-                </>
+                <Title tag='h5' label={title} fontWeight='light' />
               )}
-              {/* <Title tag='h6' label={text} /> */}
-              {/* <Typography id="transition-modal-description" sx={{ mt: 2 }}> */}
-              <Typography id="transition-modal-description">
-                {text}
-              </Typography>
+              <Title tag='h6' label={text} fontWeight='light' />
               <Button className={styles.button} type="button" onClick={handleClose}>Ok</Button>
             </div>
           </Box>

@@ -1,6 +1,11 @@
+import UserTemplate from "../../templates/UserTemplate/UserTemplate";
+import styles from './User.module.css';
+
 const User = () => {
   return (
-    <div>Protected page</div>
+    <div className={styles.contentWrapper}>
+      <UserTemplate />
+    </div>
   );
 };
 

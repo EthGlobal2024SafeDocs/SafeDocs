@@ -1,0 +1,14 @@
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 24px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0 28px;
+  gap: 40px;
+}
