@@ -13,7 +13,11 @@ This is especially useful for:
 - sharing timed content to users
 - loaning ebooks 
 
-![Overview](/readme_img/readme_multishare.png)
+### SignScan in Action
+
+| The Multishare Problem | Store and Share | Distribution |
+| --- | --- | --- |
+| ![Multishare](/readme_img/readme_multishare.png) | ![Store and Share](/readme_img/readme_store_share.png) | ![Distribution](/readme_img/readme_distribution.png) |
 
 ## Table of Contents
 1. [Features](#features)
@@ -30,11 +34,16 @@ This is especially useful for:
 
 ## Features
 
-- **Decentralized Access Control:** Uses Sign Protocol attestations as passes to securely access exclusive content.
-- **Encrypted Content Storage:** Store encrypted files securely using Basin S3, ensuring no unauthorized consumption.
-- **Zero-Knowledge Server Operations:** Our servers never handle unencrypted data or know the contents of your documents.
-- **Proxy Re-Encryption:** Securely re-encrypt content for delivery, ensuring it can only be decrypted by the intended recipient.
-- **Client-Side Security:** All encryption and decryption operations are performed on the user's device, guaranteeing privacy.
+- **Decentralized Access Control:** 
+    - Uses Sign Protocol attestations as passes to securely access exclusive content.
+- **Encrypted Content Storage:** 
+    - Store encrypted files securely using Basin S3, ensuring no unauthorized consumption.
+- **Zero-Knowledge Server Operations:** 
+    - Our servers never handle unencrypted data or know the contents of your documents.
+- **Proxy Re-Encryption:** 
+    - Securely re-encrypt content for delivery, ensuring it can only be decrypted by the intended recipient.
+- **Client-Side Security:** 
+    - All encryption and decryption operations are performed on the user's device, guaranteeing privacy.
 
 ## The Problem
 
@@ -55,10 +64,6 @@ To solve for these issues, we've created a trustless time-based access control s
 - Files are encrypted on device and sent to our servers for storage
 - Sharers create a time-based access control passes to share their files with others
 - Consumers present their passes to access the content
-
-| Store and Share | Distribution |
-| --- | --- |
-| ![Store and Share](/readme_img/readme_store_share.png) | ![Distribution](/readme_img/readme_distribution.png) |
 
 ## System Architecture
 
