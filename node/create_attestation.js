@@ -27,7 +27,8 @@ const attest = async ({
         },
         validUntil: validUntil,
         indexingValue: recipient,
-        recipients: [recipient]
+        recipients: [recipient],
+        dataLocation: "onchain"
       });
     console.log(res);
     
