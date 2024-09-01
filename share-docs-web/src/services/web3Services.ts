@@ -3,7 +3,7 @@ import { privateKeyToAccount } from "viem/accounts";
 import { SignMessageReturnType, createWalletClient, http, toHex } from "viem";
 import { mainnet } from "viem/chains";
 import Proxy from '../lib/proxy';
-import encryptData from '../lib';
+import { encryptData } from '../lib';
 import { EncryptedPayload, UserDocument } from "../models/api/document";
 
 export const getSignature = async (email: string, sk_acc: any): Promise<SignMessageReturnType | undefined> => {
