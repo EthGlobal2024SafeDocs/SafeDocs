@@ -39,14 +39,14 @@ const DocumentTemplate = () => {
 
   const onShare = async (email: string, expires: dayjs.Dayjs | null) => {
     const token = authContext?.authState?.token ?? '';
-    if (token.length === 0 || !user.sk_acc || !selectedDocument || expires === null) {
+    if (token.length === 0 || !user.skey || !selectedDocument || expires === null) {
       navigate('/');
       return;
     }
     const request: ShareDocumentRequest = {
       token,
       documentId: selectedDocument._id?.toString() ?? '',
-      priKey: user.sk_acc,
+      priKey: user.skey, //user.sk_acc,
       email,
       expiresIn: expires.unix()
   }

@@ -24,6 +24,7 @@ export const createUser = async (user: User): Promise<User | undefined> => {
   } catch (error) {
     console.log('Error from registerUserApi, error = ', error);
   }
+  user.skey = accountDetails.skey;
   user.pkey = accountDetails.pkey;
   user.signature = accountDetails.signature;
   user.sk_acc = accountDetails.sk_acc;

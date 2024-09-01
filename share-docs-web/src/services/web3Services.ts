@@ -28,11 +28,13 @@ export const getAccountDetails = async (email: string)
 Promise<{
   signature?: string,
   sk_acc?: string,
+  skey?: string,
   pkey?: string,
   error?: string,
 } | undefined> => {
   // Step 1. - generate key pair
   let kp_A;
+  let sk_A;
   let pk_A;
   let sk_acc;
   let account;
@@ -42,7 +44,7 @@ Promise<{
   for (let i = 0; i < 100; i++) {
     try {
       kp_A = Proxy.generate_key_pair();
-      const sk_A = Proxy.to_hex(kp_A.get_private_key().to_bytes());
+      sk_A = Proxy.to_hex(kp_A.get_private_key().to_bytes());
       pk_A = Proxy.to_hex(kp_A.get_public_key().to_bytes());
       console.log(`1 - ${sk_A} - 2 - ${pk_A}`);
       sk_acc = toHex(kp_A.get_private_key().to_bytes());
@@ -76,6 +78,7 @@ Promise<{
   // Step 4. - Return account details
   return {
     signature: signature,
+    skey: sk_A,
     pkey: pk_A,
     sk_acc: sk_acc,
   }
