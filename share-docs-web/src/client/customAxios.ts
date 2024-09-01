@@ -5,7 +5,11 @@ const BASE_URL = 'https://safedoc.ngrok.io/';
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
-  headers: { 'content-type': 'application/json', accept: 'application/json' },
+  headers: { 
+    'content-type': 'application/json',
+    accept: 'application/json',
+    "Access-Control-Allow-Origin": "*",
+   },
   // httpsAgent: new https.Agent({  
   //   rejectUnauthorized: false
   // })
