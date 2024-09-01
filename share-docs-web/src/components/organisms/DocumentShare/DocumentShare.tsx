@@ -8,21 +8,27 @@ import { Handler } from '../../../shared/types/components';
 import { User } from '../../../models/user';
 import Document from '../../../models/api/document';
 import LabelText from '../../molecules/LabelText/LabelText';
+import DateTimePicker from '../DateTimePicker/DateTimePicker';
+import dayjs from 'dayjs';
 
 const DocumentShareSchema = Yup.object().shape({
   email: Yup.string()
     .email('Invalid email')
-    .required('Email is required')
+    .required('Email is required'),
+  expiresOn: Yup.mixed<dayjs.Dayjs>()
+    .nullable()
+    .required('Expires on is required'),
 });
 
 export interface DocumentShareValues {
   email: string;
+  expiresOn: dayjs.Dayjs | null;
 }
 
 type DocumentShareProps = {
   document: Document;
   user: User;
-  onShare?: (email: string) => void;
+  onShare?: (email: string, expires: dayjs.Dayjs | null) => void;
   onCancel?: Handler;
 }
 
@@ -35,13 +41,13 @@ const DocumentShare = ({ document, user, onShare, onCancel }: DocumentShareProps
         initialValues={{
           documentId: '',
           email: '',
+          expiresOn: dayjs(),
         }}
         validationSchema={DocumentShareSchema}
         onSubmit={(
           values: DocumentShareValues,
         ) => {
-          console.log('!@!@!@!');
-          onShare?.(values.email);
+          onShare?.(values.email, values.expiresOn);
         }}
       >
        {(props: FormikProps<DocumentShareValues>) => (
@@ -55,6 +61,7 @@ const DocumentShare = ({ document, user, onShare, onCancel }: DocumentShareProps
               label="Recipient email:"
               labelClassName={styles.label}
             />
+            <DateTimePicker name="expiresOn" />
             <div className={styles.buttons}>
               <Button type="submit">Share</Button>
               <Button type="button" onClick={() => onCancel?.()}>Cancel</Button>

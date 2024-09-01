@@ -1,0 +1,14 @@
+.datetimePickerContainer {
+  display: flex;
+  border-radius: 8px;
+  background-color: white;
+  width: 350px;
+  margin-left: 138px;
+}
+
+.datetimePicker {
+  display: flex;
+  border-radius: 8px;
+  background-color: white;
+  width: 350px;
+}
