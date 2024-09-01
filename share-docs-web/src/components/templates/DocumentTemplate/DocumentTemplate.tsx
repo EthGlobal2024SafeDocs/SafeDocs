@@ -9,6 +9,8 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import { UserDocument } from "../../../models/api/document";
 import DialogModal from "../../organisms/DialogModal/DialogModal";
+import DocumentView from "../../organisms/DocumentView/DocumentView";
+import { getDecryptedPayload } from "../../../services/web3Services";
 
 const DocumentTemplate = () => {
   const { user } = useAppStore();
@@ -38,6 +40,24 @@ const DocumentTemplate = () => {
     console.log('share document = ', selectedDocument);
     navigate('/user');
   }
+
+  const doDecrypt = (): string | undefined => {
+    if (!user.pkey) {
+      navigate('/user');
+      return;
+    }
+    const documentToDecrypt = selectedDocument ? selectedDocument
+      : selectedSharedDocument 
+        ? selectedSharedDocument : undefined;
+    if (!documentToDecrypt) {
+      return undefined;
+    }
+    const userDocument = getDecryptedPayload(user.pkey, documentToDecrypt.payload);
+    return JSON.stringify(userDocument);
+  }
+
+  const decryptedDocument = selectedDocument ? doDecrypt() : undefined;
+  console.log('decrypted document view : ', decryptedDocument);
 
   const onAdd = async (payload: string) => {
     console.log('Adding document with payload: ', payload);
@@ -70,10 +90,12 @@ const DocumentTemplate = () => {
 
   return (
     <>
-      {documentPageType === DocumentPageType.Share &&
+      {documentPageType === DocumentPageType.Share && selectedDocument &&
         <DocumentShare document={selectedDocument} user={user} onShare={onShare} onCancel={onCancel} />}
       {documentPageType === DocumentPageType.Add &&
         <DocumentAdd onAdd={onAdd} onCancel={onCancel} />}
+      {documentPageType === DocumentPageType.View &&
+        <DocumentView document={decryptedDocument} onCancel={onCancel} />}
       <DialogModal text={dialogText} title={dialogTitle} isOpen={isOpen} onClose={onDialogClosed} />
     </>
   );

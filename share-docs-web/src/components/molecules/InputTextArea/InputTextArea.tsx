@@ -7,7 +7,9 @@ type InputTextAreaProps = {
   name: string;
   ariaLabel: string;
   placeholder: string;
-  labelClassName?: string
+  labelClassName?: string;
+  disabled?: boolean;
+  value?: string | undefined;
 }
 
 const InputTextArea = ({
@@ -16,12 +18,15 @@ const InputTextArea = ({
   ariaLabel,
   placeholder,
   labelClassName = '',
+  disabled,
+  value,
 }: InputTextAreaProps) => {
   const [field, meta] = useField(name);
   return (
     <div className={styles.inputWrapper}>
       <span className={clsx(styles.label, labelClassName)}>{label}</span>
       <textarea
+        defaultValue={value}
         {...field}
         aria-label={ariaLabel}
         name={field.name}
@@ -29,6 +34,7 @@ const InputTextArea = ({
         cols={50}
         placeholder={placeholder}
         className={styles.inputText}
+        disabled={disabled}
       />
       {meta.touched && meta.error ? (
         <div className={styles.errorMessage}>{meta.error}</div>

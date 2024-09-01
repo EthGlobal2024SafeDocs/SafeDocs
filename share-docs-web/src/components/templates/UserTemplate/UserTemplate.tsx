@@ -32,9 +32,11 @@ const UserTemplate = () => {
       switch (documentPageType) {
         case DocumentPageType.Share:
           setSelectedDocument(document);
+          setSelectedSharedDocument(undefined);
           break;
         case DocumentPageType.View:
           setSelectedSharedDocument(document);
+          setSelectedDocument(undefined);
           break;
         default:
           // no document needed
