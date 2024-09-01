@@ -6,7 +6,7 @@ var options = {
   mode: CryptoJS.mode.CBC,
   padding: CryptoJS.pad.Pkcs7
 };
-function encryptData(publicKey, data) {
+export function encryptData(publicKey, data) {
   let pubKey = Proxy.public_key_from_bytes(Proxy.from_hex(publicKey));
   var cp = Proxy.encapsulate(pubKey);
   var symKey = Proxy.to_hex(cp.symmetric_key.to_bytes());
@@ -20,7 +20,7 @@ function encryptData(publicKey, data) {
   };
 }
 
-function decryptData(privateKey, obj) {
+export function decryptData(privateKey, obj) {
   let priKey = Proxy.private_key_from_bytes(Proxy.from_hex(privateKey));
   let capsule = Proxy.capsule_from_bytes(Proxy.from_hex(obj.key));
   var symKey = Proxy.decapsulate(capsule, priKey);
@@ -31,24 +31,16 @@ function decryptData(privateKey, obj) {
   return decrypted.toString(CryptoJS.enc.Utf8);
 }
 
-function generateReEncrytionKey(privateKey, publicKey) {
+export function generateReEncrytionKey(privateKey, publicKey) {
   let priKey = Proxy.private_key_from_bytes(Proxy.from_hex(privateKey));
   let pubKey = Proxy.public_key_from_bytes(Proxy.from_hex(publicKey));
 
   var rk = Proxy.generate_re_encryption_key(priKey, pubKey);
   return Proxy.to_hex(rk.to_bytes());
 }
-function reEncryption(Rk, obj) {
+export function reEncryption(Rk, obj) {
   let rk = Proxy.re_encryption_key_from_bytes(Proxy.from_hex(Rk));
   let capsule = Proxy.capsule_from_bytes(Proxy.from_hex(obj.key));
   let re_capsule = Proxy.re_encrypt_capsule(capsule, rk);
   obj.key = Proxy.to_hex(re_capsule.to_bytes());
 }
-
-export default {
-  encryptData,
-  decryptData,
-  generateReEncrytionKey,
-  reEncryption,
-  Proxy
-};
