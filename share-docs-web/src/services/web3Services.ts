@@ -3,7 +3,7 @@ import { privateKeyToAccount } from "viem/accounts";
 import { SignMessageReturnType, createWalletClient, http, toHex } from "viem";
 import { mainnet } from "viem/chains";
 import Proxy from '../lib/proxy';
-import { encryptData, decryptData } from '../lib';
+import { encryptData, decryptData, generateReEncrytionKey } from '../lib';
 import { EncryptedPayload, UserDocument } from "../models/api/document";
 
 export const getSignature = async (email: string, sk_acc: any): Promise<SignMessageReturnType | undefined> => {
@@ -91,4 +91,15 @@ export const getDecryptedPayload = (pubKey: string, payload: EncryptedPayload): 
   const pri = Proxy.to_hex(pkey.to_bytes());
   const decryptedData = decryptData(pri, payload);
   return JSON.parse(decryptedData) as UserDocument;
+}
+
+export const generateProxyKey = (aPriKey: string, bPunKey: string) => {
+  const aPk = Proxy.private_key_from_bytes(Proxy.from_hex(aPriKey));
+  const aPri = Proxy.to_hex(aPk.to_bytes());
+
+  const bPk = Proxy.private_key_from_bytes(Proxy.from_hex(bPunKey));
+  const bPub = Proxy.to_hex(bPk.get_public_key().to_bytes());
+
+  const proxyKey = generateReEncrytionKey(aPri, bPub);
+  return proxyKey;
 }

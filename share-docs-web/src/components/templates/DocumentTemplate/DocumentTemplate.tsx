@@ -11,6 +11,8 @@ import { UserDocument } from "../../../models/api/document";
 import DialogModal from "../../organisms/DialogModal/DialogModal";
 import DocumentView from "../../organisms/DocumentView/DocumentView";
 import { getDecryptedPayload } from "../../../services/web3Services";
+import { ShareDocumentRequest, shareDocument } from "../../../services/shareDocumentService";
+import dayjs from "dayjs";
 
 const DocumentTemplate = () => {
   const { user } = useAppStore();
@@ -35,10 +37,27 @@ const DocumentTemplate = () => {
     setIsOpen(true);
   }
 
-  const onShare = (email: string) => {
-    console.log('share doc. email = ', email);
-    console.log('share document = ', selectedDocument);
-    navigate('/user');
+  const onShare = async (email: string, expires: dayjs.Dayjs | null) => {
+    const token = authContext?.authState?.token ?? '';
+    if (token.length === 0 || !user.pkey || !selectedDocument || expires === null) {
+      navigate('/');
+      return;
+    }
+    const request: ShareDocumentRequest = {
+      token,
+      documentId: selectedDocument._id?.toString() ?? '',
+      priKey: user.pkey,
+      email,
+      expiresIn: expires.unix()
+  }
+    const result = await shareDocument(request);
+    if (result) {
+      setHasErrors(false);
+      showDialog('Document Shared', 'Document shared successfully.');
+    } else {
+      setHasErrors(true);
+      showDialog('Share Document Error', 'Could not share document. Please try again.');
+    }
   }
 
   const doDecrypt = (): string | undefined => {
