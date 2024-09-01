@@ -86,7 +86,7 @@ const SignupForm = ({ onSubmit, onCancel }: SignupFormProps) => {
           </Form>
         )}
       </Formik>
-      </div>
+    </div>
   );
 };
 

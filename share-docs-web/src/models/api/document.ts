@@ -9,3 +9,12 @@ export type EncryptedPayload = {
     key: string;
     cipher: string;
 };
+
+export interface DriverLicence {
+    number: string;
+    firstName: string;
+    lastName: string;
+    cardNumber: string;
+}
+
+export type UserDocument = DriverLicence;

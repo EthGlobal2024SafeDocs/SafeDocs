@@ -1,10 +1,14 @@
 import axios, { InternalAxiosRequestConfig } from "axios";
+// import https from "https";
 
-const BASE_URL = 'http://localhost';
+const BASE_URL = 'https://safedoc.ngrok.io/';
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: { 'content-type': 'application/json', accept: 'application/json' },
+  // httpsAgent: new https.Agent({  
+  //   rejectUnauthorized: false
+  // })
 });
 
 const requestHandler = (request: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {

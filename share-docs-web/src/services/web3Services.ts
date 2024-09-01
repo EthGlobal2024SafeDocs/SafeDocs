@@ -3,6 +3,8 @@ import { privateKeyToAccount } from "viem/accounts";
 import { SignMessageReturnType, createWalletClient, http, toHex } from "viem";
 import { mainnet } from "viem/chains";
 import Proxy from '../lib/proxy';
+import encryptData from '../lib';
+import { EncryptedPayload, UserDocument } from "../models/api/document";
 
 export const getSignature = async (email: string, sk_acc: any): Promise<SignMessageReturnType | undefined> => {
   const account = privateKeyToAccount(sk_acc);
@@ -77,4 +79,9 @@ Promise<{
     pkey: pk_A,
     sk_acc: sk_acc,
   }
+}
+
+export const generateEncryptedPayload = (pubKey: string, userDocument: UserDocument): EncryptedPayload => {
+  const encryptPayload = encryptData(pubKey, JSON.stringify(userDocument));
+  return encryptPayload;
 }

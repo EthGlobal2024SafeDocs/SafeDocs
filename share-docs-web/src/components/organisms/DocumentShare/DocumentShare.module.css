@@ -1,0 +1,32 @@
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 580px;
+  gap: 24px;
+}
+
+.title {
+  justify-content: flex-start;
+}
+
+.documentContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  /* width: 580px; */
+  gap: 16px;
+}
+
+.label {
+  width: 114px;
+  font-weight: 500;
+  font-size: inherit;
+  justify-content: flex-start;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0 28px;
+}

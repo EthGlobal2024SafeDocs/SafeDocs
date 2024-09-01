@@ -4,10 +4,13 @@ import { AuthContext } from "../../../context/AuthContext";
 import { getDocuments, getSharedDocuments } from "../../../services/getDocumentsApiServices";
 import Document from '../../../models/api/document';
 import { useNavigate } from "react-router-dom";
+import { useDocumentStore } from "../../../store/useDocumentStore";
+import { DocumentPageType } from "../../../shared/types/components";
 
 const UserTemplate = () => {
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
+  const { setSelectedDocument, setSelectedSharedDocument, setDocumentPageType } = useDocumentStore();
   const [myDocuments, setMyDocuments] = useState<Document[]>([]);
   const [sharedDocuments, setSharedDocuments] = useState<Document[]>([]);
 
@@ -23,13 +26,34 @@ const UserTemplate = () => {
     setSharedDocuments(sharedDocumentsResult);
   };
 
+  const handleClick = (documentPageType: DocumentPageType, document?: Document) => {
+    setDocumentPageType(documentPageType);
+    if (document) {
+      switch (documentPageType) {
+        case DocumentPageType.Share:
+          setSelectedDocument(document);
+          break;
+        case DocumentPageType.View:
+          setSelectedSharedDocument(document);
+          break;
+        default:
+          // no document needed
+      }
+    }
+    navigate('/document')
+  }
+
   useEffect(() => {
     fetchUserData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <UserContent myDocuments={myDocuments} sharedDocuments={sharedDocuments} />
+    <UserContent
+      myDocuments={myDocuments}
+      sharedDocuments={sharedDocuments}
+      onClick={handleClick}
+    />
   );
 };
 

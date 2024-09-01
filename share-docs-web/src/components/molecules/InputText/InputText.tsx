@@ -1,5 +1,5 @@
+import clsx from "clsx";
 import { useField  } from 'formik';
-
 import styles from './InputText.module.css';
 
 type InputTextProps = {
@@ -8,6 +8,7 @@ type InputTextProps = {
   ariaLabel: string;
   type?: string;
   placeholder: string;
+  labelClassName?: string
 }
 
 const InputText = ({
@@ -16,11 +17,12 @@ const InputText = ({
   ariaLabel,
   type,
   placeholder,
+  labelClassName = '',
 }: InputTextProps) => {
   const [field, meta] = useField(name);
   return (
     <div className={styles.inputWrapper}>
-      <span className={styles.label}>{label}</span>
+      <span className={clsx(styles.label, labelClassName)}>{label}</span>
       <input
         {...field}
         aria-label={ariaLabel}

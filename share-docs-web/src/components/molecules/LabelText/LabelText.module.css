@@ -1,0 +1,18 @@
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  width: 100%;
+}
+
+.text {
+  font-size: 16px;
+  padding-left: 2px;
+}
+
+.label {
+  width: 114px;
+  font-weight: 500;
+  font-size: inherit;
+  justify-content: flex-start;
+}

@@ -1,0 +1,7 @@
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  gap: 32px;
+  min-width: 480px;
+}

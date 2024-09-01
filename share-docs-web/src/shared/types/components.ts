@@ -9,3 +9,10 @@ export enum PageType {
 export enum DocumentTypes {
   DriversLicense = "DriversLicense"
 }
+
+export enum DocumentPageType {
+  Add,
+  Share,
+  Accept,
+  View
+}
