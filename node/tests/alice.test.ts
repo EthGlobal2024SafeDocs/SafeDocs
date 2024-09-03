@@ -1,7 +1,7 @@
 import { mnemonicToAccount, privateKeyToAccount } from 'viem/accounts';
 import { createWalletClient, http, toHex } from 'viem';
 import { mainnet } from 'viem/chains';
-import PRE,{ Proxy } from '../src/lib';
+import PRE, { Proxy, encryptData } from '../src/lib';
 
 const mnemonic = 'airport put edge nurse orange struggle scene account math shiver script angry';
 const alice_pk = '459c8af7d3b50b31f859db099eb12b21385b3c4505b3fde82cd7bcfe3db74997';
@@ -48,8 +48,8 @@ describe('working with documents', () => {
 
     it('decrypt document payload', () => {
         const payload = {
-            key: '048150b4901e438b31ced229ec278b4bc1a0cb6ca99fb4d8ecf6023800f834cdcf2bcb5934c44c4e681acb9c7b1953391ea912be7440c876938bf7a859fb6f00080448f6db56bde64dc2e3c206ba9447415d1594418b4fc9b6dd315dadb020ee0c2f0f01a7071e1ed45b9401be96947178ac9eb105a002dfec691bb26a6ca483b96e001833d63eb3415ba13c023c64d5e20bafc2f7467eda575de01328bb9a9008e1',
-            cipher: 'pESdTn0fv1koeKyP5MMqzqxiedV/WkGz1oGtX0WfaO5MFPquraghYVBNAyS4epmYofnYj/NrA2yvfuvdKmY0HgPTOBNNvpdjiGlcynyAJEkE4aP6qvSMDTqRXlhzfGGt',
+            key: '04ef2a434ebc1684b0c4e2a7f59c3dcf669f821eb2adfe846a442dc9a4e523339781a40bf422ad9a605ed0bfe1ff19563fd5faca837f2771e40788666884184a8304504dbff4bd2628f8f3c6c365d0edf80f17e7c19de17e1c2ca6980aa8e6d308f284fab6e97b268e5fcc78664209065dc5a02440c7fba8c0145490566aa69b3e30439493ea1f4e0d7951b34ffbdea0b7aaf842efcd18f8f3fbea0519bdca9702ec0416feaf7849e2a6570eb6fc43a6d722d129b16e5b05d2c5755344a5f3e7bfa08e0673339ee7d194d3a9a14b96cbc24c5d1df4e985eb1ada3b7ffb9df0ac34e6dc',
+            cipher: 'cQJGIjBG4hphN81Fjgvt3Q==',
         };
 
         const alicePk = Proxy.private_key_from_bytes(Proxy.from_hex(alice_pk));

@@ -74,16 +74,17 @@ export const ShareDocumentHandler = async (req: Request, res: Response) => {
 
     // Create attestation with Sign protocol
 
-    const expiry_in_unix_time = Math.round((Date.now() / 1000) + request.expiry);
+    // const expiry_in_unix_time = Math.round((Date.now() / 1000) + request.expiry);
 
     const recipientAddress = publicKeyToAddress(recipientWallet.public_key as Hex);
+    const ownerAddress = publicKeyToAddress(owner.public_key as Hex);
 
     const shared = await ShareDocument(
-        owner.public_key as Hex,
+        ownerAddress,
         document.document_type,
         document._id!.toString(),
         request.proxyKey,
-        expiry_in_unix_time,
+        request.expiry,
         recipientAddress
     );
     const { attestationId } = shared;
@@ -101,7 +102,7 @@ export const ShareDocumentHandler = async (req: Request, res: Response) => {
 
     // Send email to intended recipient
 
-    await SendShareEmail(owner.email, recipientWallet.email);
+    //await SendShareEmail(owner.email, recipientWallet.email);
 
     res.status(200).send({ _id: result?.insertedId });
 };
