@@ -100,8 +100,8 @@ export const generateProxyKey = (aPriKey: string, bPunKey: string) => {
   const aPk = Proxy.private_key_from_bytes(Proxy.from_hex(aPriKey));
   const aPri = Proxy.to_hex(aPk.to_bytes());
 
-  const bPk = Proxy.private_key_from_bytes(Proxy.from_hex(bPunKey));
-  const bPub = Proxy.to_hex(bPk.get_public_key().to_bytes());
+  const bPk = Proxy.public_key_from_bytes(Proxy.from_hex(bPunKey));
+  const bPub = Proxy.to_hex(bPk.to_bytes());
 
   const proxyKey = generateReEncrytionKey(aPri, bPub);
   return proxyKey;
