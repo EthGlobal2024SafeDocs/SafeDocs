@@ -12,19 +12,24 @@ export type ShareDocumentRequest = {
 
 export const shareDocument = async (shareDocumentRequest: ShareDocumentRequest): Promise<ShareDocumentResponse | undefined> => {
   const { email, expiresIn, priKey, token, documentId } = shareDocumentRequest;
-  const pubKey = await getPublicKeyApi(token, email);
-  if (!pubKey) {
+  try {
+    const pubKey = await getPublicKeyApi(token, email);
+    if (!pubKey) {
+      return undefined;
+    }
+    const proxyKey = generateProxyKey(priKey, pubKey.public_key);
+    if (!proxyKey) {
+      return undefined;
+    }
+    const request: ShareRequest = {
+      email,
+      expiry: expiresIn,
+      proxyKey
+    };
+    const result = await shareDocumentApi(token, documentId, request);
+    return result;
+  } catch (error) {
+    console.log('Some error happened sharing the document. Error: ', error);
     return undefined;
   }
-  const proxyKey = generateProxyKey(priKey, pubKey.public_key);
-  if (!proxyKey) {
-    return undefined;
-  }
-  const request: ShareRequest = {
-    email,
-    expiry: expiresIn,
-    proxyKey
-  };
-  const result = await shareDocumentApi(token, documentId, request);
-  return result;
 };

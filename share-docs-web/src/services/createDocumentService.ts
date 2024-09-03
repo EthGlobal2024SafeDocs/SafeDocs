@@ -12,6 +12,11 @@ export const createDocument = async (token: string, pubKey : string, document: U
     type: DocumentTypes.DriversLicense,
     payload,
   };
-  const result = await createDocumentApi(token, request);
-  return result;
+  try {
+    const result = await createDocumentApi(token, request);
+    return result;
+  } catch (error) {
+    console.log('Error creating the document. Error: ', error);
+    return undefined;
+  }
 };

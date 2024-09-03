@@ -4,7 +4,7 @@ import WelcomeContainer from "../../organisms/WelcomeContent/WelcomeContainer"
 import { PageType } from "../../../shared/types/components";
 import SignupForm, { SignupValues } from "../../organisms/SignupForm/SignupForm";
 import LoginForm, { LoginValues } from "../../organisms/LoginForm/LoginForm";
-import { createUser, userExists } from "../../../services/signupService";
+import { createUser, userExists } from "../../../services/registerService";
 import { User } from "../../../models/user";
 import DialogModal from '../../organisms/DialogModal/DialogModal';
 import { useAppStore } from "../../../store/useAppStore";

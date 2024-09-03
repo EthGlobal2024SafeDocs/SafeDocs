@@ -25,6 +25,11 @@ export const loginUser = async (username: string): Promise<LoginResults | undefi
   if (!signature) {
     return undefined;
   }
-  const loginResponse = await loginUserApi(user.email, signature);
-  return { user, response: loginResponse };
+  try {
+    const loginResponse = await loginUserApi(user.email, signature);
+    return { user, response: loginResponse };
+  } catch (error) {
+    console.log('Login error. Error: ', error);
+    return undefined;
+  }
 };
