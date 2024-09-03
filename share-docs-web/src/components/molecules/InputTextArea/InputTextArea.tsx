@@ -19,14 +19,12 @@ const InputTextArea = ({
   placeholder,
   labelClassName = '',
   disabled,
-  value,
 }: InputTextAreaProps) => {
   const [field, meta] = useField(name);
   return (
     <div className={styles.inputWrapper}>
       <span className={clsx(styles.label, labelClassName)}>{label}</span>
       <textarea
-        defaultValue={value}
         {...field}
         aria-label={ariaLabel}
         name={field.name}

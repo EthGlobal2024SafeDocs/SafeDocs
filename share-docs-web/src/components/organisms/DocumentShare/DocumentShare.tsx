@@ -52,7 +52,11 @@ const DocumentShare = ({ document, user, onShare, onCancel }: DocumentShareProps
       >
        {(props: FormikProps<DocumentShareValues>) => (
           <Form className={styles.documentContent}>
-            <LabelText label='Document Id:' text={document?._id?.toString() || 'MyDriverLicenceID.12121212'} />
+            <LabelText
+              labelClassName={styles.label}
+              label='Document Id:'
+              text={document?._id?.toString() || 'MyDriverLicenceID.12121212'}
+            />
             <InputText
               ariaLabel="Recipient email"
               name="email"

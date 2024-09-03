@@ -11,7 +11,7 @@
 }
 
 .label {
-  width: 114px;
+  min-width: 114px;
   font-weight: 500;
   font-size: inherit;
   justify-content: flex-start;

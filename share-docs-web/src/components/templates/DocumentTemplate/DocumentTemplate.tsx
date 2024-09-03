@@ -71,12 +71,12 @@ const DocumentTemplate = () => {
     if (!documentToDecrypt) {
       return undefined;
     }
-    const userDocument = getDecryptedPayload(user.pkey, documentToDecrypt.payload);
+    // TODO: need to uncomment decrypt once we solved encryption issue
+    const userDocument = documentToDecrypt; //getDecryptedPayload(user.pkey, documentToDecrypt.payload);
     return JSON.stringify(userDocument);
   }
 
-  const decryptedDocument = selectedDocument ? doDecrypt() : undefined;
-  console.log('decrypted document view : ', decryptedDocument);
+  const decryptedDocument = doDecrypt();
 
   const onAdd = async (payload: string) => {
     console.log('Adding document with payload: ', payload);
