@@ -43,10 +43,11 @@ export const CreateDocumentHandler = async (req: Request, res: Response) => {
         ],
     });
 
-    if (!document) {
-        console.log('document already exists for wallet', req.body);
-        res.status(400).send('Invalid request!');
+    let _id = document?._id;
 
+    if (document) {
+        console.log('document already exists for wallet', document);
+    } else {
         document = {
             document_type: request.type,
             wallet_id: wallet._id,
@@ -55,9 +56,9 @@ export const CreateDocumentHandler = async (req: Request, res: Response) => {
 
         const id = await collections.documents?.insertOne(document);
 
-        document = { ...document, _id: id?.insertedId };
+        _id = id?.insertedId;
     }
 
     // Return types with 200 network status
-    res.status(200).send({ _id: document._id });
+    res.status(200).send({ _id });
 };

@@ -31,6 +31,8 @@ export const ShareDocument = async (
         throw new Error(`No Schema defined for document type: ${documentType}`);
     }
 
+    const account = GetPlatformAccount();
+
     const client = SignClient();
 
     const attestation = await client.createAttestation({
@@ -39,7 +41,7 @@ export const ShareDocument = async (
             document_id: documentId,
             proxy: proxyKey,
         },
-        attester: ownerAddress,
+        attester: account.address,
         validUntil: validUntil,
         indexingValue: recipient,
         recipients: [recipient],
