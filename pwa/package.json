@@ -10,14 +10,24 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.54.1",
     "@tanstack/react-router": "^1.52.5",
     "@uidotdev/usehooks": "^2.4.1",
+    "bn.js": "^5.2.1",
+    "dexie": "^4.0.8",
+    "dexie-react-hooks": "^1.1.7",
+    "elliptic": "^6.5.7",
+    "flowbite-react": "^0.10.1",
+    "js-sha256": "^0.11.0",
     "path": "^0.12.7",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.53.0",
+    "viem": "^2.21.1"
   },
   "devDependencies": {
     "@tanstack/router-devtools": "^1.52.5",
+    "@tanstack/react-query-devtools": "4",
     "@tanstack/router-plugin": "^1.52.0",
     "@types/node": "^22.5.2",
     "@types/react": "^18.3.1",

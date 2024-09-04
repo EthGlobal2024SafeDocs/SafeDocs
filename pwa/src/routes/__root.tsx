@@ -1,11 +1,10 @@
-import {
-  createRootRouteWithContext} from "@tanstack/react-router";
-import PublicLayout from "@/app/PublicLayout";
+import { createRootRouteWithContext } from "@tanstack/react-router";
 
 export interface RouterContext {
   isLoggedIn: boolean;
+  token?: string;
+  login: (token:string) => Promise<void>;
+
 }
 
-export const Route = createRootRouteWithContext<RouterContext>()({
-  component: PublicLayout
-});
+export const Route = createRootRouteWithContext<RouterContext>()({});

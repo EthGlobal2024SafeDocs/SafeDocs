@@ -1,4 +1,4 @@
-import LoggedInLayout from "@/app/LoggedInLayout";
+import LoggedInLayout from "@/app/Layouts/LoggedInLayout";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_auth")({
