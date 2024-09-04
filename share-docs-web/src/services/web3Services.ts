@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { privateKeyToAccount } from "viem/accounts";
-import { SignMessageReturnType, createWalletClient, http, toHex } from "viem";
-import { mainnet } from "viem/chains";
+import { privateKeyToAccount } from 'viem/accounts';
+import { SignMessageReturnType, createWalletClient, http, toHex } from 'viem';
+import { mainnet } from 'viem/chains';
 import Proxy from '../lib/proxy';
 import { encryptData, decryptData, generateReEncrytionKey } from '../lib';
-import { EncryptedPayload, UserDocument } from "../models/api/document";
+import { EncryptedPayload, UserDocument } from '../models/api/document';
 
 export const getSignature = async (email: string, sk_acc: any): Promise<SignMessageReturnType | undefined> => {
   const account = privateKeyToAccount(sk_acc);
@@ -32,7 +32,6 @@ Promise<{
   pkey?: string,
   error?: string,
 } | undefined> => {
-  // Step 1. - generate key pair
   let kp_A;
   let sk_A;
   let pk_A;
@@ -58,24 +57,17 @@ Promise<{
   if (!account || !pk_A || !sk_acc) {
     return { error: `Couldn't generate valid key pair.` };
   }
-  // account can give me private and public keys!!! 
-  // Store data in indexedDb
-
-  // Step 2. - Need to create wallet
+  
   const wallet = await createWalletClient({
     account,
     chain: mainnet,
     transport: http()
   });
 
-  // Step 3. - Generate signature from email. Will also be a payload for the login endpoint
-  const message = email;
-
   const signature = await wallet.signMessage({
     account,
-    message
+    message: email
   });
-  // Step 4. - Return account details
   return {
     signature: signature,
     skey: sk_A,
