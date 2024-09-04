@@ -24,14 +24,14 @@ export const getSignature = async (email: string, sk_acc: any): Promise<SignMess
 }
 
 export const getAccountDetails = async (email: string)
-  : 
-Promise<{
-  signature?: string,
-  sk_acc?: string,
-  skey?: string,
-  pkey?: string,
-  error?: string,
-} | undefined> => {
+  :
+  Promise<{
+    signature?: string,
+    sk_acc?: string,
+    skey?: string,
+    pkey?: string,
+    error?: string,
+  } | undefined> => {
   let kp_A;
   let sk_A;
   let pk_A;
@@ -47,7 +47,7 @@ Promise<{
       pk_A = Proxy.to_hex(kp_A.get_public_key().to_bytes());
       console.log(`1 - ${sk_A} - 2 - ${pk_A}`);
       sk_acc = toHex(kp_A.get_private_key().to_bytes());
-    
+
       account = privateKeyToAccount(sk_acc);
       break;
     } catch (error) {
@@ -57,7 +57,7 @@ Promise<{
   if (!account || !pk_A || !sk_acc) {
     return { error: `Couldn't generate valid key pair.` };
   }
-  
+
   const wallet = await createWalletClient({
     account,
     chain: mainnet,
@@ -81,8 +81,8 @@ export const generateEncryptedPayload = (pubKey: string, userDocument: UserDocum
   return encryptPayload;
 }
 
-export const getDecryptedPayload = (pubKey: string, payload: EncryptedPayload): UserDocument => {
-  const pkey = Proxy.private_key_from_bytes(Proxy.from_hex(pubKey));
+export const getDecryptedPayload = (sKey: string, payload: EncryptedPayload): UserDocument => {
+  const pkey = Proxy.private_key_from_bytes(Proxy.from_hex(sKey));
   const pri = Proxy.to_hex(pkey.to_bytes());
   const decryptedData = decryptData(pri, payload);
   return JSON.parse(decryptedData) as UserDocument;

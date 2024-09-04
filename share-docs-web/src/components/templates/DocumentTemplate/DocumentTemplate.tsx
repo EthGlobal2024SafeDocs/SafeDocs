@@ -73,21 +73,21 @@ const DocumentTemplate = () => {
   };
 
   const doDecrypt = (): string | undefined => {
-    if (!user.pkey) {
+    if (!user.skey) {
       navigate('/user');
       return;
     }
     const documentToDecrypt = selectedDocument
       ? selectedDocument
       : selectedSharedDocument
-      ? selectedSharedDocument
-      : undefined;
+        ? selectedSharedDocument
+        : undefined;
     if (!documentToDecrypt) {
       return undefined;
     }
     // TODO
     // const userDocument = documentToDecrypt; //getDecryptedPayload(user.pkey, documentToDecrypt.payload);
-    const userDocument = getDecryptedPayload(user.pkey, documentToDecrypt.payload);
+    const userDocument = getDecryptedPayload(user.skey, documentToDecrypt.payload);
     return JSON.stringify(userDocument);
   };
 
