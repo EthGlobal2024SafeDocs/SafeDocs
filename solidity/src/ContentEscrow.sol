@@ -1,10 +1,18 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
+
+import {ISP} from "@ethsign/sign-protocol-evm/src/interfaces/ISP.sol";
+import {Attestation} from "@ethsign/sign-protocol-evm/src/models/Attestation.sol";
+import {DataLocation} from "@ethsign/sign-protocol-evm/src/models/DataLocation.sol";
 
 contract ContentEscrow {
+    ISP public spInstance;
+    uint64 public schemaId;
+
     struct Escrow {
         address subscriber; // EVM address associated with the escrow
         uint256 amount; // Amount of ETH in escrow
+        uint64 validUntil; // Validity timestamp for the transformation key
         bool isReleased; // Status if funds are released
         uint256 documentId; // Document ID the subscriber wants access to (uint256)
     }
@@ -23,22 +31,32 @@ contract ContentEscrow {
     event EscrowReleased(
         uint256 indexed escrowId,
         address indexed subscriber,
-        bytes transformationKey,
+        uint256 attestationId,
         uint256 timestamp,
         uint256 validityUntil
     );
 
-    constructor() {
-        contentCreator = msg.sender; // Content creator is the contract deployer
+    constructor(
+        address _contentCreator,
+        address _spInstance,
+        uint64 _schemaId
+    ) {
+        contentCreator = _contentCreator; // Set the content creator address
+        spInstance = ISP(_spInstance); // Set the instance of the external SP contract
+        schemaId = _schemaId; // Set the schema ID
     }
 
     // Subscriber deposits funds into escrow, linked to their EVM address and document ID
-    function depositEscrow(uint256 documentId) external payable {
+    function depositEscrow(
+        uint256 documentId,
+        uint64 validUntil
+    ) external payable {
         require(msg.value > 0, "Must deposit some funds");
 
         escrows[nextEscrowId] = Escrow({
             subscriber: msg.sender,
             amount: msg.value,
+            validUntil: validUntil,
             isReleased: false,
             documentId: documentId
         });
@@ -64,6 +82,23 @@ contract ContentEscrow {
             "Transformation key must be 97 bytes long"
         );
 
+        bytes[] memory recipients = new bytes[](1);
+        recipients[0] = abi.encode(escrow.subscriber);
+        Attestation memory a = Attestation({
+            schemaId: schemaId,
+            linkedAttestationId: 0,
+            attestTimestamp: 0,
+            revokeTimestamp: 0,
+            attester: address(this),
+            validUntil: escrow.validUntil,
+            dataLocation: DataLocation.ONCHAIN,
+            revoked: false,
+            recipients: recipients,
+            data: transformationKey // SignScan assumes this is from `abi.encode(...)`
+        });
+
+        uint64 attestationId = spInstance.attest(a, "", "", "");
+
         // Transfer funds to content creator
         // payable(contentCreator).transfer(escrow.amount);
         (bool success, ) = payable(contentCreator).call{value: escrow.amount}(
@@ -75,13 +110,12 @@ contract ContentEscrow {
         escrow.isReleased = success;
 
         // Emit event
-        uint256 validityUntil = block.timestamp + 30 days;
         emit EscrowReleased(
             escrowId,
             escrow.subscriber,
-            transformationKey,
+            attestationId,
             block.timestamp,
-            validityUntil
+            escrow.validUntil
         );
     }
 

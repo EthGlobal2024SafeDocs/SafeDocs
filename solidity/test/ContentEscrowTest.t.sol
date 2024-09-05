@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import "forge-std/Test.sol";
 import "../src/ContentEscrow.sol"; // Import the contract
@@ -11,14 +11,18 @@ contract ContentEscrowTest is Test {
 
     function setUp() public {
         vm.prank(contentCreator); // Simulate contract creation by the content creator
-        escrow = new ContentEscrow();
+        escrow = new ContentEscrow(
+            contentCreator, // Mock content creator
+            address(3), // Mock SP instance
+            12345 // Mock schema ID
+        );
     }
 
     // Test require condition for depositEscrow: "Must deposit some funds"
     function testDepositRequiresFunds() public {
         vm.prank(subscriber);
         vm.expectRevert("Must deposit some funds");
-        escrow.depositEscrow(12345); // No funds provided
+        escrow.depositEscrow(12345, 1693939513); // No funds provided
     }
 
     // Test require condition for releaseEscrow: "Only content creator can release funds"
@@ -26,7 +30,7 @@ contract ContentEscrowTest is Test {
         // Simulate a valid deposit from the subscriber
         vm.deal(subscriber, 1 ether);
         vm.prank(subscriber);
-        escrow.depositEscrow{value: 1 ether}(12345);
+        escrow.depositEscrow{value: 1 ether}(12345, 1693939513);
 
         // Attempt to release escrow as the subscriber (not the content creator)
         vm.prank(subscriber);
@@ -39,7 +43,7 @@ contract ContentEscrowTest is Test {
         // Simulate a valid deposit from the subscriber
         vm.deal(subscriber, 1 ether);
         vm.prank(subscriber);
-        escrow.depositEscrow{value: 1 ether}(12345);
+        escrow.depositEscrow{value: 1 ether}(12345, 1693939513);
 
         // Release escrow for the first time as content creator
         vm.prank(contentCreator);
@@ -64,7 +68,7 @@ contract ContentEscrowTest is Test {
         // Simulate a valid deposit from the subscriber
         vm.deal(subscriber, 1 ether);
         vm.prank(subscriber);
-        escrow.depositEscrow{value: 1 ether}(12345);
+        escrow.depositEscrow{value: 1 ether}(12345, 1693939513);
 
         // Attempt to release with a transformation key of incorrect length (not 97 bytes)
         vm.prank(contentCreator);
@@ -78,7 +82,7 @@ contract ContentEscrowTest is Test {
         vm.prank(subscriber); // Simulate the subscriber making the deposit
 
         // Perform the deposit with 1 ETH and document ID 12345
-        escrow.depositEscrow{value: 1 ether}(12345);
+        escrow.depositEscrow{value: 1 ether}(12345, 1693939513);
 
         // Check contract balance is now 1 ETH
         assertEq(address(escrow).balance, 1 ether);
@@ -103,7 +107,7 @@ contract ContentEscrowTest is Test {
         // Simulate a deposit from the subscriber
         vm.deal(subscriber, 1 ether);
         vm.prank(subscriber);
-        escrow.depositEscrow{value: 1 ether}(12345);
+        escrow.depositEscrow{value: 1 ether}(12345, 1693939513);
 
         // Check initial balance of content creator
         uint256 initialCreatorBalance = contentCreator.balance;
@@ -131,7 +135,7 @@ contract ContentEscrowTest is Test {
         emit ContentEscrow.EscrowDeposited(0, subscriber, 1 ether, 12345);
 
         // Perform the deposit, which should trigger the EscrowDeposited event
-        escrow.depositEscrow{value: 1 ether}(12345);
+        escrow.depositEscrow{value: 1 ether}(12345, 1693939513);
     }
 
     // Test release event
@@ -139,7 +143,7 @@ contract ContentEscrowTest is Test {
         // Simulate a deposit from the subscriber
         vm.deal(subscriber, 1 ether);
         vm.prank(subscriber);
-        escrow.depositEscrow{value: 1 ether}(12345);
+        escrow.depositEscrow{value: 1 ether}(12345, 1693939513);
 
         // Prepare a valid 97-byte transformation key
         bytes memory transformationKey = new bytes(97);
@@ -151,7 +155,7 @@ contract ContentEscrowTest is Test {
         emit ContentEscrow.EscrowReleased(
             0,
             subscriber,
-            transformationKey,
+            0,
             currentTime,
             validityUntil
         );

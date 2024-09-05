@@ -12,7 +12,11 @@ contract EscrowScript is Script {
     function run() public {
         vm.startBroadcast();
 
-        counter = new ContentEscrow();
+        counter = new ContentEscrow(
+            address(1), // Mock content creator
+            address(2), // Mock SP instance
+            12345 // Mock schema ID
+        );
 
         vm.stopBroadcast();
     }
