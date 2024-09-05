@@ -86,10 +86,24 @@ const DocumentTemplate = () => {
     if (!documentToDecrypt) {
       return undefined;
     }
-    // TODO
-    // const userDocument = documentToDecrypt; //getDecryptedPayload(user.pkey, documentToDecrypt.payload);
-    const userDocument = getDecryptedPayload(user.skey, documentToDecrypt.payload);
-    return JSON.stringify(userDocument);
+    if (hasErrors) {
+      navigate('/user');
+      return;
+    }
+    if (documentPageType === DocumentPageType.View) {
+      try {
+        const userDocument = getDecryptedPayload(user.skey, documentToDecrypt.payload);
+        return JSON.stringify(userDocument);
+      } catch (error) {
+        console.log('Decrypt Error = ', error);
+        setHasErrors(true);
+        showDialog(
+          'View Document',
+          'Could not view the document. The document may be corrupted.'
+        );
+      }
+    }
+    return undefined;
   };
 
   const decryptedDocument = doDecrypt();
