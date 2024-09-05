@@ -17,7 +17,8 @@ const UserTemplate = () => {
   const fetchUserData = async (): Promise<void> => {
     const token = authContext?.authState?.token ?? '';
     if (token.length === 0) {
-      navigate('/');
+      authContext?.logout();
+      // navigate('/');
       return;
     }
     const data = await getDocuments(token);
@@ -42,8 +43,15 @@ const UserTemplate = () => {
           // no document needed
       }
     }
-    navigate('/document')
+    navigate('/document');
   }
+
+  const handleViewCLick = (document?: Document) => {
+    setDocumentPageType(DocumentPageType.View);
+    setSelectedSharedDocument(document);
+    setSelectedDocument(undefined);
+    navigate('/document');
+  };
 
   useEffect(() => {
     fetchUserData();
@@ -55,6 +63,7 @@ const UserTemplate = () => {
       myDocuments={myDocuments}
       sharedDocuments={sharedDocuments}
       onClick={handleClick}
+      onView={handleViewCLick}
     />
   );
 };

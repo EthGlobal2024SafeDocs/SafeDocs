@@ -23,16 +23,14 @@ const DateTimePicker = ({ name, onChange }: DateTimePickerProps) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className={styles.datetimePickerContainer}>
-        <DemoContainer components={['DateTimePicker']}>
-          <MuiDateTimePicker
-            className={styles.datetimePicker}
-            name={name}
-            label="Expires on"
-            value={field.value}
-            minDate={dayjs()}
-            onChange={handleChange}
-          />
-        </DemoContainer>
+        <MuiDateTimePicker
+          className={styles.datetimePicker}
+          name={name}
+          label="Expires on"
+          value={field.value}
+          minDate={dayjs()}
+          onChange={handleChange}
+        />
       </div>
     </LocalizationProvider>
   );

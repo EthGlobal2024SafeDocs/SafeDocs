@@ -6,7 +6,8 @@ type ButtonProps = {
   children?: JSX.Element | string;
   disabled?: boolean;
   onClick?: Handler;
-  type?: "button" | "submit" | "reset";
+  type?: 'button' | 'submit' | 'reset';
+  variant?: 'primary' | 'secondary'
   className?: string;
 }
 
@@ -16,6 +17,7 @@ const Button = ({
   onClick,
   type = "button",
   className,
+  variant,
 }: ButtonProps) => {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!disabled) {
@@ -26,7 +28,12 @@ const Button = ({
   }
   return (
     <button
-      className={clsx(styles.button, className ? className : '')}
+      className={
+        clsx(
+          styles.button,
+          className ? className : '',
+          variant ? styles[variant] : '',
+        )}
       onClick={handleClick}
       disabled={disabled}
       type={type}

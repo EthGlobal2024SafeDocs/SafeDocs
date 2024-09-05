@@ -10,15 +10,38 @@ type UserContentProps = {
   myDocuments?: Document[];
   sharedDocuments?: Document[];
   onClick?: (documentPageType: DocumentPageType, document?: Document) => void;
+  onView?: (document?: Document) => void;
   onCancel?: Handler;
 }
 
-const UserContent = ({ myDocuments = [], sharedDocuments = [], onClick }: UserContentProps) => {
+const UserContent = ({ myDocuments = [], sharedDocuments = [], onClick, onView }: UserContentProps) => {
   const documentList = myDocuments?.map((document, index) => {
     const clickHandler = () => {
       onClick?.(DocumentPageType.Share, document);
     };
-    return <DocumentItem key={`my-document${index}`} item={document} buttonLabel='Share' onClick={clickHandler} />;
+    const clickViewHandler = () => {
+      onView?.(document);
+    };
+    return (
+      <>
+        {onView
+          ? <DocumentItem
+              key={`my-document${index}`}
+              item={document}
+              buttonLabel='Share'
+              viewButtonLabel='View'
+              onClick={clickHandler}
+              onView={clickViewHandler}
+            />
+          : <DocumentItem
+              key={`my-document${index}`}
+              item={document}
+              buttonLabel='Share'
+              onClick={clickHandler}
+            />
+        }
+      </>
+    );
   });
 
   const sharedDocumentList = sharedDocuments?.map((document, index) => {
@@ -30,10 +53,12 @@ const UserContent = ({ myDocuments = [], sharedDocuments = [], onClick }: UserCo
 
   return (
     <div className={styles.contentWrapper}>
-      <Title label='My shares' tag='h4' />
-      {myDocuments.length > 0 ? <DocumentList>{documentList}</DocumentList> : null}
-      <div className={styles.buttons}>
-        <Button type="button" onClick={() => onClick?.(DocumentPageType.Add)}>Add Document</Button>
+      <div className={styles.userDocuments}>
+        <Title label='My shares' tag='h4' />
+        {myDocuments.length > 0 ? <DocumentList>{documentList}</DocumentList> : null}
+        <div className={styles.buttons}>
+          <Button type="button" onClick={() => onClick?.(DocumentPageType.Add)}>Add Document</Button>
+        </div>
       </div>
       <Title label='Accepted shares' tag='h4' />
       {sharedDocuments.length > 0 ? <DocumentList>{sharedDocumentList}</DocumentList> : null}

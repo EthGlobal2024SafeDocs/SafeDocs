@@ -1,7 +1,7 @@
 .contentWrapper {
   display: flex;
   flex-direction: column;
-  width: 580px;
+  width: 100%;
   gap: 24px;
 }
 
@@ -13,7 +13,6 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  /* width: 580px; */
   gap: 16px;
 }
 
@@ -27,6 +26,12 @@
 .buttons {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  padding: 0 28px;
+  justify-content: center;
+  gap: 64px;
+}
+
+@media ((max-width: 500px)) {
+  .buttons {
+    gap: 32px;
+  }
 }

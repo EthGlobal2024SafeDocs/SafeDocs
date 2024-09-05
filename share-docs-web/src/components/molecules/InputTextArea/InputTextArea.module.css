@@ -24,3 +24,13 @@
 .errorMessage {
   color: #ff8000;
 }
+
+@media ((max-width: 440px)) {
+  .inputWrapper {
+    flex-direction: column;
+  }
+
+  .inputText {
+    width: 100%;
+  }
+}

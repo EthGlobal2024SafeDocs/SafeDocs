@@ -9,6 +9,12 @@
   font-family: inherit;
   cursor: pointer;
   transition: border-color 0.25s;
+
+  &.secondary {
+    width: 110px;
+    height: 32px;
+    background-color: #2a7ea7;
+  }
 }
 
 .button:hover:enabled {

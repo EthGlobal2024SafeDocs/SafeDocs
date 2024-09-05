@@ -49,7 +49,8 @@ const DocumentTemplate = () => {
       !selectedDocument ||
       expires === null
     ) {
-      navigate('/');
+      authContext?.logout();
+      // navigate('/');
       return;
     }
     const request: ShareDocumentRequest = {
@@ -96,7 +97,8 @@ const DocumentTemplate = () => {
   const onAdd = async (payload: string) => {
     const token = authContext?.authState?.token ?? '';
     if (token.length === 0 || !user.pkey) {
-      navigate('/');
+      authContext?.logout();
+      // navigate('/');
       return;
     }
     try {
