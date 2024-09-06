@@ -1,26 +1,26 @@
 import { Link, useRouteContext } from "@tanstack/react-router";
-import { Navbar } from "flowbite-react";
+import { Button, Navbar } from "flowbite-react";
 import Logo from "@/assets/logo.png";
 
 export default function Header() {
-  const { isLoggedIn } = useRouteContext({ strict: false });
+  const { token, logout } = useRouteContext({ from:'__root__' });
 
   return (
-    <Navbar fluid rounded>
-      <Navbar.Brand>
-        <Link to="/">
+    <Navbar fluid rounded >
+      <Navbar.Brand as={Link} to={"/"}>
         <img src={Logo} className="mr-3 h-6 sm:h-9 bg-slate-600" />
-        </Link>
       </Navbar.Brand>
-      {/* <Navbar.Toggle /> */}
 
-      {isLoggedIn && (
-        <Navbar.Collapse>
-          <Link to="/documents">Documents</Link>
-
-          <Navbar.Link as={Link}>Shares</Navbar.Link>
-        
-        </Navbar.Collapse>
+      {token && (
+        <div>
+          <Navbar.Toggle />
+          <Navbar.Collapse>
+            <Navbar.Link as={Link} to={"/documents"}>
+              Documents
+            </Navbar.Link>
+            <Button size="xs" color="purple" onClick={logout}>Logout</Button>
+          </Navbar.Collapse>
+        </div>
       )}
     </Navbar>
   );

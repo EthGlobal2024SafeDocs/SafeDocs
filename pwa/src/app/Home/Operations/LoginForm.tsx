@@ -5,13 +5,14 @@ import { useMutation } from "@tanstack/react-query";
 import { LoginUserService } from "@/services/user";
 import { useNavigate, useRouteContext } from "@tanstack/react-router";
 
+
 type LoginForm = {
   username: string;
 };
 
 export function LoginForm() {
   const { register, handleSubmit } = useForm<LoginForm>();
-  const { login } = useRouteContext({ strict:false });
+  const { login } = useRouteContext({ from:'__root__' });
   const navigate = useNavigate();
 
   const { mutate } = useMutation({
@@ -20,12 +21,14 @@ export function LoginForm() {
       // todo: check if the user existing in browser database
       const user = await getUserByUsername(username);
       if (user) {
+        
         const token = await LoginUserService(user);
-        await login!(token);
-        console.log(token)
-        navigate({ to: "/documents" });
+        console.log("token", token);
+        await login(token.token, token.expiryIn);
+
+        
       } else {
-        console.log('no user found')
+        console.log("no user found");
         throw Error("user does not exist!");
       }
     }

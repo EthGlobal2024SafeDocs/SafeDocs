@@ -8,6 +8,7 @@ import "./index.css";
 import { routeTree } from "./routeTree.gen";
 import AuthProvider from "./providers/auth-provider";
 import QueryProvider from "./providers/query-provider";
+import CookieProvider from "./providers/cookie-provider";
 
 // Create a new router instance
 const router = createRouter({
@@ -33,9 +34,11 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
-      <QueryProvider>
-        <AuthProvider router={router} />
-      </QueryProvider>
+      <CookieProvider>
+        <QueryProvider>
+          <AuthProvider router={router} />
+        </QueryProvider>
+      </CookieProvider>
     </StrictMode>
   );
 }

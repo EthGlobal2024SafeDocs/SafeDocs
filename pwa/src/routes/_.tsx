@@ -4,8 +4,8 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 export const Route = createFileRoute("/")({
   component: PublicLayout,
   beforeLoad: ({ context }) => {
-    if (context.isLoggedIn) {
-      console.log('redirect auth uer')
+    console.log("route _ ", context.token);
+    if (context.token) {
       throw redirect({ to: "/documents" });
     }
   }

@@ -1,10 +1,11 @@
 import LoggedInLayout from "@/app/Layouts/LoggedInLayout";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_auth")({
   component: LoggedInLayout,
   beforeLoad: ({ context }) => {
-    context.isLoggedIn = true;
-  },
-  
+    if (!context.token) {
+      throw redirect({ to: "/" });
+    }
+  }
 });

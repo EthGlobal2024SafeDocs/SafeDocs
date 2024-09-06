@@ -1,6 +1,6 @@
 import { SignMessageReturnType } from "viem";
 
-type LoginResponse = {
+export type LoginResponse = {
   token: string;
   expiryIn: number;
 };
@@ -16,7 +16,7 @@ type EncryptedPayload = {
 
 enum DocumentTypes {
   DriversLicense = "DriversLicense"
-};
+}
 
 export type Document = {
   wallet_id: string;
@@ -63,10 +63,7 @@ export const RegisterUser = async (
   return await result.json();
 };
 
-
-export const GetDocuments = async (
-  auth: string
-): Promise<Array<Document>> => {
+export const GetDocuments = async (auth: string): Promise<Array<Document>> => {
   const result = await fetch(`${import.meta.env.VITE_base_url}/documents`, {
     method: "get",
     headers: {
@@ -82,22 +79,25 @@ export const GetDocuments = async (
   return await result.json();
 };
 
-export const GetDocument =  async (
+export const GetDocument = async (
   auth: string,
   documentId: string
 ): Promise<Document> => {
-  const result = await fetch(`${import.meta.env.VITE_base_url}/documents/${documentId}`, {
-    method: "get",
-    headers: {
-      Authorization: `Bearer ${auth}`,
-      Accept: "application/json",
-      "Content-Type": "application/json"
+  const result = await fetch(
+    `${import.meta.env.VITE_base_url}/documents/${documentId}`,
+    {
+      method: "get",
+      headers: {
+        Authorization: `Bearer ${auth}`,
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      }
     }
-  });
+  );
 
   if (result.status != 200) {
     throw Error(await result.json());
   }
-  
+
   return await result.json();
 };
