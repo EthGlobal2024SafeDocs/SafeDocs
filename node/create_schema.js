@@ -14,15 +14,34 @@ const client = new SignProtocolClient(SpMode.OnChain, {
 
 // Create Schema
 const createSchema = async () => {
-    const res = await client.createSchema({
-        name: "SafeDocs Access Pass",
-        data: [
-          { name: "documentId", type: "string" },
-          { name: "tkey", type: "string" },
-        ],
-      });
-    
-    console.log(res);
+  const res = await client.createSchema({
+    name: "SignCast Access Pass With Hook",
+    hook: "0x652883aE6705E24d51a23471fF345bE557CEe1f0",
+    data: [
+      {
+        "name": "escrowId",
+        "type": "uint256"
+      },
+      {
+        "name": "contentCreator",
+        "type": "address"
+      },
+      {
+        "name": "subscriber",
+        "type": "address"
+      },
+      {
+        "name": "documentId",
+        "type": "uint256"
+      },
+      {
+        "name": "transformationKey",
+        "type": "bytes"
+      }
+    ]
+  });
+
+  console.log(res);
 }
 
 createSchema()
