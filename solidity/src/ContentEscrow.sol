@@ -24,7 +24,10 @@ contract ContentEscrow is ISPHook {
 
     struct EscrowData {
         uint256 escrowId;
+        address contentCreator;
+        address subscriber;
         uint256 documentId;
+        uint64 validUntil;
         bytes transformationKey;
     }
 
@@ -41,18 +44,22 @@ contract ContentEscrow is ISPHook {
 
     event EscrowReleased(
         uint256 indexed escrowId,
+        address indexed contentCreator,
         address indexed subscriber,
         uint256 attestationId,
         uint256 timestamp,
         uint256 validityUntil
     );
 
-    event Test(bytes data);
+    event EscrowRevoked(uint256 indexed attestationId);
+
+    event AttestationReceived(EscrowData data);
     event LogSender(address indexed sender);
 
     constructor(address _spInstance) {
         moderator = msg.sender;
         spInstance = ISP(_spInstance); // Set the instance of the external SP contract
+        schemaId = 0x46; // Placeholder for the schema ID
     }
 
     // Set schema id
@@ -108,12 +115,16 @@ contract ContentEscrow is ISPHook {
         // Create the attestation with EscrowData struct containing escrow ID and transformation key
         EscrowData memory escrowData = EscrowData({
             escrowId: escrowId,
+            contentCreator: escrow.contentCreator,
+            subscriber: escrow.subscriber,
             documentId: escrow.documentId,
+            validUntil: escrow.validUntil,
             transformationKey: transformationKey
         });
 
         bytes[] memory recipients = new bytes[](1);
         recipients[0] = abi.encode(escrow.subscriber);
+        bytes memory data = abi.encode(escrowData);
         Attestation memory a = Attestation({
             schemaId: schemaId,
             linkedAttestationId: 0,
@@ -124,10 +135,10 @@ contract ContentEscrow is ISPHook {
             dataLocation: DataLocation.ONCHAIN,
             revoked: false,
             recipients: recipients,
-            data: abi.encode(escrowData) // Store the EscrowData struct as the data
+            data: data // Store the EscrowData struct as the data
         });
 
-        spInstance.attest(a, "", "", "");
+        spInstance.attest(a, "", "", data);
     }
 
     // Handle attestation with ETH payment
@@ -137,17 +148,21 @@ contract ContentEscrow is ISPHook {
         uint64 attestationId,
         bytes calldata extraData
     ) external payable override {
-        emit Test(extraData);
-        // Decode the escrow ID from the extraData
+        emit AttestationReceived(abi.decode(extraData, (EscrowData)));
+
+        // // // Decode the escrow ID from the extraData
         EscrowData memory escrowData = abi.decode(extraData, (EscrowData));
         uint256 escrowId = escrowData.escrowId;
         Escrow storage escrow = escrows[escrowId];
+
         require(!escrow.isReleased, "Funds already released");
         require(escrow.amount > 0, "No funds available for this escrow");
 
-        // Transfer funds to the content creator
-        // (bool success, ) = payable(attester).call{value: escrow.amount}("");
-        // require(success, "Transfer failed");
+        // // Transfer funds to the content creator
+        (bool success, ) = payable(escrowData.contentCreator).call{
+            value: escrow.amount
+        }("");
+        require(success, "Transfer failed");
 
         // Mark escrow as released
         escrow.isReleased = true;
@@ -156,6 +171,7 @@ contract ContentEscrow is ISPHook {
         // Emit event
         emit EscrowReleased(
             escrowId,
+            escrow.contentCreator,
             escrow.subscriber,
             attestationId,
             block.timestamp,
@@ -172,34 +188,8 @@ contract ContentEscrow is ISPHook {
         uint256 resolverFeeERC20Amount,
         bytes calldata extraData
     ) external override {
-        emit Test(extraData);
-        // Decode the escrow ID from the extraData
-        EscrowData memory escrowData = abi.decode(extraData, (EscrowData));
-        uint256 escrowId = escrowData.escrowId;
-        Escrow storage escrow = escrows[escrowId];
-        require(!escrow.isReleased, "Funds already released");
-        require(escrow.amount > 0, "No funds available for this escrow");
-        // Transfer the ERC20 token payment to the content creator
-        require(
-            resolverFeeERC20Token.transfer(attester, resolverFeeERC20Amount),
-            "ERC20 transfer failed"
-        );
-
-        // // Transfer funds to the content creator
-        // (bool success, ) = payable(attester).call{value: escrow.amount}("");
-        // require(success, "Transfer failed");
-
-        // Mark escrow as released
-        escrow.isReleased = true;
-        escrow.attestationId = attestationId;
-        // Emit event
-        emit EscrowReleased(
-            escrowId,
-            escrow.subscriber,
-            attestationId,
-            block.timestamp,
-            escrow.validUntil
-        );
+        // emit AttestationReceived(extraData);
+        // Doesn't yet support other ERC20 tokens
     }
 
     // Handle revocation with ETH payment
@@ -209,7 +199,7 @@ contract ContentEscrow is ISPHook {
         uint64 attestationId,
         bytes calldata extraData
     ) external payable override {
-        // No support for revoke yet
+        emit EscrowRevoked(attestationId);
     }
 
     // Handle revocation with ERC20 payment
@@ -221,7 +211,7 @@ contract ContentEscrow is ISPHook {
         uint256 resolverFeeERC20Amount,
         bytes calldata extraData
     ) external override {
-        // No support for revoke yet
+        emit EscrowRevoked(attestationId);
     }
 
     // Get escrow details (public getter)
