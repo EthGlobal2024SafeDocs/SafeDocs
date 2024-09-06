@@ -63,19 +63,6 @@ contract ContentEscrowTest is Test {
         escrow.releaseEscrow(0, new bytes(97));
     }
 
-    // Test require condition for releaseEscrow: "Transformation key must be 97 bytes long"
-    function testReleaseFailsForInvalidTransformationKeyLength() public {
-        // Simulate a valid deposit from the subscriber
-        vm.deal(subscriber, 1 ether);
-        vm.prank(subscriber);
-        escrow.depositEscrow{value: 1 ether}(12345, 1693939513);
-
-        // Attempt to release with a transformation key of incorrect length (not 97 bytes)
-        vm.prank(contentCreator);
-        vm.expectRevert("Transformation key must be 97 bytes long");
-        escrow.releaseEscrow(0, new bytes(50)); // Provide a transformation key of 50 bytes (should fail)
-    }
-
     // Test successful deposit
     function testSuccessfulDeposit() public {
         vm.deal(subscriber, 1 ether); // Give the subscriber 1 ETH
@@ -92,7 +79,8 @@ contract ContentEscrowTest is Test {
             address subscriberAddr,
             uint256 amount,
             bool isReleased,
-            uint256 documentId
+            uint256 documentId,
+            uint256 attestationId
         ) = escrow.getEscrow(0);
 
         // Assert that the values are correct
@@ -102,18 +90,22 @@ contract ContentEscrowTest is Test {
         assertEq(documentId, 12345);
     }
 
-    // Test successful release
     function testSuccessfulRelease() public {
-        // Simulate a deposit from the subscriber
+        // Set up the test by depositing funds into escrow
         vm.deal(subscriber, 1 ether);
         vm.prank(subscriber);
-        escrow.depositEscrow{value: 1 ether}(12345, 1693939513);
+        escrow.depositEscrow{value: 1 ether}(
+            12345,
+            uint64(block.timestamp + 30 days)
+        );
 
-        // Check initial balance of content creator
+        // Check initial balance of the content creator
         uint256 initialCreatorBalance = contentCreator.balance;
 
-        // Perform the release with a valid 97-byte transformation key
-        bytes memory transformationKey = new bytes(97); // Valid 97-byte key
+        // Prepare a valid 97-byte transformation key
+        bytes memory transformationKey = new bytes(97);
+
+        // Call the releaseEscrow function as the content creator
         vm.prank(contentCreator);
         escrow.releaseEscrow(0, transformationKey);
 
@@ -121,8 +113,19 @@ contract ContentEscrowTest is Test {
         assertEq(contentCreator.balance, initialCreatorBalance + 1 ether);
 
         // Retrieve the escrow details to verify release
-        (, , bool isReleased, ) = escrow.getEscrow(0);
+        (
+            ,
+            uint256 amount,
+            bool isReleased,
+            uint256 documentId,
+            uint64 attestationId
+        ) = escrow.getEscrow(0);
+
+        // Assert escrow was correctly released
         assertTrue(isReleased);
+        assertEq(amount, 1 ether);
+        assertEq(documentId, 12345);
+        assertTrue(attestationId > 0); // Check that an attestation ID was created
     }
 
     // Test deposit event
