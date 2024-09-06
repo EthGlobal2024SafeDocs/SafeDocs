@@ -22,6 +22,7 @@ export function LoginForm() {
       if (user) {
         const token = await LoginUserService(user);
         await login!(token);
+        console.log(token)
         navigate({ to: "/documents" });
       } else {
         console.log('no user found')

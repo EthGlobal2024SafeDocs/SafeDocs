@@ -14,8 +14,9 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as Import } from './routes/_'
 import { Route as IndexImport } from './routes/_/index'
-import { Route as AuthDocumentsImport } from './routes/_auth/documents'
 import { Route as RegisterImport } from './routes/_/register'
+import { Route as AuthDocumentsIndexImport } from './routes/_auth/documents/index'
+import { Route as AuthDocumentsDocumentIdImport } from './routes/_auth/documents/$documentId'
 
 // Create/Update Routes
 
@@ -34,14 +35,19 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => Route,
 } as any)
 
-const AuthDocumentsRoute = AuthDocumentsImport.update({
-  path: '/documents',
-  getParentRoute: () => AuthRoute,
-} as any)
-
 const RegisterRoute = RegisterImport.update({
   path: '/register',
   getParentRoute: () => Route,
+} as any)
+
+const AuthDocumentsIndexRoute = AuthDocumentsIndexImport.update({
+  path: '/documents/',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthDocumentsDocumentIdRoute = AuthDocumentsDocumentIdImport.update({
+  path: '/documents/$documentId',
+  getParentRoute: () => AuthRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -69,19 +75,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterImport
       parentRoute: typeof rootRoute
     }
-    '/_auth/documents': {
-      id: '/_auth/documents'
-      path: '/documents'
-      fullPath: '/documents'
-      preLoaderRoute: typeof AuthDocumentsImport
-      parentRoute: typeof AuthImport
-    }
     '//': {
       id: '//'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
+    }
+    '/_auth/documents/$documentId': {
+      id: '/_auth/documents/$documentId'
+      path: '/documents/$documentId'
+      fullPath: '/documents/$documentId'
+      preLoaderRoute: typeof AuthDocumentsDocumentIdImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/documents/': {
+      id: '/_auth/documents/'
+      path: '/documents'
+      fullPath: '/documents'
+      preLoaderRoute: typeof AuthDocumentsIndexImport
+      parentRoute: typeof AuthImport
     }
   }
 }
@@ -90,7 +103,10 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   Route: Route.addChildren({ RegisterRoute, IndexRoute }),
-  AuthRoute: AuthRoute.addChildren({ AuthDocumentsRoute }),
+  AuthRoute: AuthRoute.addChildren({
+    AuthDocumentsDocumentIdRoute,
+    AuthDocumentsIndexRoute,
+  }),
 })
 
 /* prettier-ignore-end */
@@ -115,20 +131,25 @@ export const routeTree = rootRoute.addChildren({
     "/_auth": {
       "filePath": "_auth.tsx",
       "children": [
-        "/_auth/documents"
+        "/_auth/documents/$documentId",
+        "/_auth/documents/"
       ]
     },
     "//register": {
       "filePath": "_/register.tsx",
       "parent": "/"
     },
-    "/_auth/documents": {
-      "filePath": "_auth/documents.tsx",
-      "parent": "/_auth"
-    },
     "//": {
       "filePath": "_/index.tsx",
       "parent": "/"
+    },
+    "/_auth/documents/$documentId": {
+      "filePath": "_auth/documents/$documentId.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/documents/": {
+      "filePath": "_auth/documents/index.tsx",
+      "parent": "/_auth"
     }
   }
 }

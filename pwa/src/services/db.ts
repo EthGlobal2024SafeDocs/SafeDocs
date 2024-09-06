@@ -25,3 +25,9 @@ export const addUser = async (username: string, email: string, key: string) => {
   const userId = await db.users.add({ username, email, key });
   return await db.users.get(userId);
 };
+
+export const getKeyByUsername = async (username: string) => {
+  return await db.users.where("username").equalsIgnoreCase(username).first().then((user) => {
+    return user?.key;
+  });
+}

@@ -19,8 +19,16 @@ export const GetDocumentHandler = async (req: Request, res: Response) => {
         return;
     }
 
-    // Check if document exists in db and is owned by auth'd user
+    // Check if documentId isn't valid
+    try {
+        new ObjectId(documentId);
+    } catch {
+        console.log("document doesn't exist", req.body);
+        res.status(404).send('Document does not exists!');
+        return;
+    }
 
+    // Check if document exists in db and is owned by auth'd user
     const document = await collections.documents?.findOne<Document>({
         wallet_id: new ObjectId(sub),
         _id: new ObjectId(documentId),
