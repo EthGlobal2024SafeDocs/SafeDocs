@@ -1,5 +1,7 @@
 # SignCast: Secure, Decentralized Content Delivery System
 
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/UdjVnGoNvU4/0.jpg)](https://www.youtube.com/watch?v=UdjVnGoNvU4)
+
 ## Overview
 
 Hello! This is **SignCast**.
