@@ -103,24 +103,38 @@ To solve for these issues, we've created a trustless time-based access control s
 
 **SignCast** uses Sign Protocol's attestations as passes to control access to content. Here’s how it works:
 
-- **Pass Issuance:** Content owners issue unique attestations to consumers, granting them access to specific content for a predetermined time.
-- **Pass Verification:** Consumers present their attestation to SignCast's servers. The server verifies the pass by checking ownership and expiry details, ensuring that only authorized users can access the content.
+- **Issue Access passes:**
+  - Content owners issue unique attestations to consumers, granting them access to specific content for a predetermined time.
+- **Pass Verification:**
+  -Consumers present their attestation to SignCast's servers. The server verifies the pass by checking ownership and expiry details, ensuring that only authorized users can access the content.
 
 ### Content Storage and Security with Basin S3
 
-- **Encrypted Storage:** All files are encrypted by the content creator and stored securely using Basin S3. Content Identifiers (CIDs) are stored in a secure directory on SignCast’s servers, preventing unauthorized access.
-- **Secure Directory Management:** CIDs are protected on the server side, adding an extra layer of security and ensuring that content can only be retrieved with a valid attestation. The CIDs are not stored on the attestation itself since attestations are public. Doing so would expose the content to unauthorized access.
+- **Encrypted Storage:** 
+  - All files are encrypted by the content creator and stored securely using Basin S3. Content Identifiers (CIDs) are stored in a secure directory on SignCast’s servers, preventing unauthorized access.
+- **Secure Directory Management:** 
+  - CIDs are protected on the server side, adding an extra layer of security and ensuring that content can only be retrieved with a valid attestation. The CIDs are not stored on the attestation itself since attestations are public. Doing so would expose the content to unauthorized access.
 
 ### Proxy Re-Encryption for Secure Content Delivery
 
-- **No Plain Text Handling:** Content is uploaded to SignCast fully encrypted by the creator, ensuring that our servers never see plain text files.
-- **Transformation Key Integration:** A transformation key, tailored to the consumer’s public key, is included in the attestation, allowing the server to re-encrypt content specifically for the consumer.
-- **Re-Encryption Process:** Upon receiving a valid attestation, the server re-encrypts the content and delivers it to the consumer, who can decrypt it using their private key.
+- **No Plain Text Handling:**
+  - Content is uploaded to SignCast fully encrypted by the creator, ensuring that our servers never see plain text files.
+- **Transformation Key Integration:** 
+  - A transformation key, tailored to the consumer’s public key, is included in the attestation, allowing the server to re-encrypt content specifically for the consumer.
+- **Re-Encryption Process:**
+  - Upon receiving a valid attestation, the server re-encrypts the content and delivers it to the consumer, who can decrypt it using their private key.
 
 ### Client-Side Encryption and Decryption
 
-- **Custom Wallet Creation:** Content creators and consumers create custom wallets via the SignCast client app. These wallets securely store private keys used for encryption and decryption.
-- **On-Device Security:** All encryption and decryption processes occur on the user's device, ensuring no sensitive data is transmitted over the network.
+- **Custom Wallet Creation:**
+  - Content creators and consumers create custom wallets via the SignCast client app. These wallets securely store private keys used for encryption and decryption.
+- **On-Device Security:**
+  - All encryption and decryption processes occur on the user's device, ensuring no sensitive data is transmitted over the network.
+
+### Smart Contract Escrow
+- **Schema Hooks**
+  - Release subscription payments to content creators
+  - Safely manage subscriber's payments.
 
 
 ## Component Breakdown of SignCast
