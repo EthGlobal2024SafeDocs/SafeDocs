@@ -3,29 +3,26 @@ import { User } from "@/services/db";
 import { RouterProvider } from "@tanstack/react-router";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
+import { useCookies, Cookies } from "react-cookie";
 
 export default function AuthProvider({ router }: { router: RouterType }) {
   const [accessToken, setToken] = useState<string>();
   const [userId, setUserId] = useState<number>();
-  const [cookies, setCookie] = useCookies<string>(["token", "user"]);
+  const [cookies, setCookie, removeCookie] = useCookies<string>(["token", "user"]);
 
-  const handleOnLogin = async (
-    user: User,
-    token: string,
-    expiresIn: number
-  ) => {
+  const handleOnLogin = async (user: User, token: string, expiresIn: number) => {
     // store the token in the cookie so we can load it again if exists and not expired
     setCookie("token", token, {
-      expires: dayjs().add(expiresIn, "seconds").toDate()
+      expires: dayjs().add(expiresIn, "seconds").toDate(),
     });
 
     setCookie("user", user.id, {
-      expires: dayjs().add(expiresIn, "seconds").toDate()
+      expires: dayjs().add(expiresIn, "seconds").toDate(),
     });
   };
   const handleLogout = async () => {
     console.log("logout called");
+    
     setCookie("token", null, { expires: dayjs().add(-1, "M").toDate() });
     setCookie("user", null, { expires: dayjs().add(-1, "M").toDate() });
   };
@@ -51,7 +48,7 @@ export default function AuthProvider({ router }: { router: RouterType }) {
           userId: userId,
           token: accessToken,
           login: handleOnLogin,
-          logout: handleLogout
+          logout: handleLogout,
         }}
       />
     </>

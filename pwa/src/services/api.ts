@@ -183,3 +183,19 @@ export const GetSharedDocuments = async (auth: string): Promise<Array<SharedDocu
   }
   return await result.json();
 };
+
+export const GetSharedDocument = async (auth: string, attestationId: string): Promise<SharedDocumentApi> => {
+  const result = await fetch(`${import.meta.env.VITE_base_url}/documents/shared/${attestationId}`, {
+    method: "get",
+    headers: {
+      Authorization: `Bearer ${auth}`,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (result.status != 200) {
+    throw Error(await result.json());
+  }
+  return await result.json();
+};

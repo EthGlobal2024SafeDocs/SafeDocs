@@ -1,22 +1,19 @@
-import { useRouteContext, Link } from "@tanstack/react-router";
+import { useRouteContext, Link, useParams } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Route } from "@/routes/_auth/documents/$documentId";
-import { Card, Button } from "flowbite-react";
 
-import { useState } from "react";
-import { DocumentTypes, getDocument } from "@/services/document";
-import { DriversLicenseDisplay } from "./Operations/DriversLicenseDisplay";
+import { Card } from "flowbite-react";
+
+import { DocumentTypes, getSharedDocument } from "@/services/document";
 import { AwardIcon, BackIcon } from "@/assets/Iconds";
-import { DocumentShareForm } from "./Operations/DocumentShareForm";
+import { DriversLicenseDisplay } from "../Documents/Operations/DriversLicenseDisplay";
 
-export function DocumentPage() {
+export function SharedPage() {
   const context = useRouteContext({ from: "__root__" });
-  const { documentId } = Route.useParams();
-  const [shareOpen, setShareOpen] = useState(false);
+  const { attestationId } = useParams({ from: "/_auth/shared/$attestationId" });
 
   const { isPending, isError, data, error } = useQuery({
-    queryKey: ["document", documentId],
-    queryFn: async () => getDocument(context, documentId),
+    queryKey: ["shared-document", attestationId],
+    queryFn: async () => await getSharedDocument(context, attestationId),
   });
 
   if (isPending) {
@@ -36,7 +33,7 @@ export function DocumentPage() {
   return (
     <div>
       <div className="mb-4 flex items-center py-2">
-        <Link to="/documents">
+        <Link to="/shared">
           <BackIcon />
         </Link>
         <h3 className="text-xl">Document Details</h3>
@@ -50,13 +47,7 @@ export function DocumentPage() {
           )}
         </h5>
         {data && <DriversLicenseDisplay {...data.payload} />}
-        {!isError && (
-          <Button color="blue" onClick={() => setShareOpen(true)}>
-            Share
-          </Button>
-        )}
       </Card>
-      <DocumentShareForm documentId={documentId} shareOpen={shareOpen} setShareOpen={setShareOpen} />
     </div>
   );
 }

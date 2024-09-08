@@ -50,9 +50,7 @@ export function DocumentsPage() {
 
         <div className="mt-2">
           {data?.length <= 0 && <div className="w-full pt-10 text-center">No Documents Exist!</div>}
-          {data?.map(
-            (d) => d && <DocumentItem key={d._id} id={d._id} payload={d.payload} type={d.document_type}></DocumentItem>,
-          )}
+          {data?.map((d) => d && <DocumentItem key={d._id} {...d} />)}
         </div>
       </div>
     </>

@@ -17,6 +17,7 @@ import { Route as IndexImport } from './routes/_/index'
 import { Route as RegisterImport } from './routes/_/register'
 import { Route as AuthSharedIndexImport } from './routes/_auth/shared/index'
 import { Route as AuthDocumentsIndexImport } from './routes/_auth/documents/index'
+import { Route as AuthSharedAttestationIdImport } from './routes/_auth/shared/$attestationId'
 import { Route as AuthDocumentsNewImport } from './routes/_auth/documents/new'
 import { Route as AuthDocumentsDocumentIdImport } from './routes/_auth/documents/$documentId'
 
@@ -49,6 +50,11 @@ const AuthSharedIndexRoute = AuthSharedIndexImport.update({
 
 const AuthDocumentsIndexRoute = AuthDocumentsIndexImport.update({
   path: '/documents/',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthSharedAttestationIdRoute = AuthSharedAttestationIdImport.update({
+  path: '/shared/$attestationId',
   getParentRoute: () => AuthRoute,
 } as any)
 
@@ -108,6 +114,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthDocumentsNewImport
       parentRoute: typeof AuthImport
     }
+    '/_auth/shared/$attestationId': {
+      id: '/_auth/shared/$attestationId'
+      path: '/shared/$attestationId'
+      fullPath: '/shared/$attestationId'
+      preLoaderRoute: typeof AuthSharedAttestationIdImport
+      parentRoute: typeof AuthImport
+    }
     '/_auth/documents/': {
       id: '/_auth/documents/'
       path: '/documents'
@@ -132,6 +145,7 @@ export const routeTree = rootRoute.addChildren({
   AuthRoute: AuthRoute.addChildren({
     AuthDocumentsDocumentIdRoute,
     AuthDocumentsNewRoute,
+    AuthSharedAttestationIdRoute,
     AuthDocumentsIndexRoute,
     AuthSharedIndexRoute,
   }),
@@ -161,6 +175,7 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/_auth/documents/$documentId",
         "/_auth/documents/new",
+        "/_auth/shared/$attestationId",
         "/_auth/documents/",
         "/_auth/shared/"
       ]
@@ -179,6 +194,10 @@ export const routeTree = rootRoute.addChildren({
     },
     "/_auth/documents/new": {
       "filePath": "_auth/documents/new.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/shared/$attestationId": {
+      "filePath": "_auth/shared/$attestationId.tsx",
       "parent": "/_auth"
     },
     "/_auth/documents/": {

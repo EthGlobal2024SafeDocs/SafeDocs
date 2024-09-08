@@ -1,12 +1,12 @@
 import { Card } from "flowbite-react";
 import { Link } from "@tanstack/react-router";
-import { Document, DocumentTypes, DriversLicenseType } from "@/services/document";
+import { DocumentTypes, DriversLicenseType, SharedDocument } from "@/services/document";
 
 import { AwardIcon } from "@/assets/Iconds";
 
-export const DocumentItem = ({ _id, document_type, payload }: Document<DriversLicenseType>) => {
+export const SharedItem = ({ document_type, payload, attestation_id }: SharedDocument<DriversLicenseType>) => {
   return (
-    <Link to="/documents/$documentId" params={{ documentId: _id }}>
+    <Link to="/shared/$attestationId" params={{ attestationId: attestation_id }}>
       <Card href="#" className="max-w-sm">
         <p className="flex flex-col text-lg font-bold tracking-tight text-gray-900 dark:text-white">
           {document_type === DocumentTypes.DriversLicense && (

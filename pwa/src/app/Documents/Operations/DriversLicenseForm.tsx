@@ -1,15 +1,10 @@
-import { createNewDocument, DocumentTypes } from "@/services/document";
+import { createNewDocument, DocumentTypes, DriversLicenseType } from "@/services/document";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate, useRouteContext } from "@tanstack/react-router";
 import { Button, Label, TextInput } from "flowbite-react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-export type DriversLicenseType = {
-  fullName: string;
-  licenseNumber: string;
-  cardNumber: string;
-  expiryDate: string;
-};
+
 
 export function DriversLicenseForm() {
   const { register, handleSubmit } = useForm<DriversLicenseType>();

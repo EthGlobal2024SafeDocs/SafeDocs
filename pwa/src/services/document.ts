@@ -1,10 +1,25 @@
 import { DecryptPayload, DecryptPayloadBulk, EncryptPayload } from "./crypto";
 import { getUserById } from "./db";
-import { AddDocument, GetDocument, GetDocuments, GetEmailPublicKey, GetSharedDocuments, ShareDocument } from "./api";
+import {
+  AddDocument,
+  GetDocument,
+  GetDocuments,
+  GetEmailPublicKey,
+  GetSharedDocument,
+  GetSharedDocuments,
+  ShareDocument,
+} from "./api";
 import { RouterContext } from "@/routes/__root";
-import { DriversLicenseType } from "@/app/Documents/Operations/DriversLicenseForm";
+
 import { generateReEncrytionKey } from "@/lib";
 import dayjs from "dayjs";
+
+export type DriversLicenseType = {
+  fullName: string;
+  licenseNumber: string;
+  cardNumber: string;
+  expiryDate: string;
+};
 
 export enum DocumentTypes {
   DriversLicense = "DriversLicense",
@@ -21,7 +36,7 @@ export type SharedDocument<T> = {
   attestation_id: string;
   document_id: string;
   document_type: DocumentTypes;
-  payload: T;
+  payload: T | "";
 };
 
 export const createNewDocument = async (context: RouterContext, type: DocumentTypes, payload: string) => {
@@ -92,7 +107,7 @@ export const shareDocument = async (context: RouterContext, id: string, email: s
   const pubKeyResult = await GetEmailPublicKey(token!, email);
 
   // generate a proxy key
-  const proxy = generateReEncrytionKey(user.key, pubKeyResult.public_key.substring(1));
+  const proxy = generateReEncrytionKey(user.key, pubKeyResult.public_key.slice(2));
 
   const expiryDate = dayjs(expiry);
 
@@ -121,9 +136,28 @@ export const getSharedDocuments = async (context: RouterContext) => {
           attestation_id: doc.attestation_id,
           document_id: doc.document_id,
           document_type: doc.document_type,
-          payload: JSON.parse(i!.payload),
+          payload: i!.payload && JSON.parse(i!.payload),
         } as SharedDocument<DriversLicenseType>;
       }
     }
   });
+};
+
+export const getSharedDocument = async (context: RouterContext, attestationId: string) => {
+  const { userId, token } = context;
+  if (!userId) throw Error("user not logged-in!");
+
+  const user = await getUserById(userId);
+  if (!user) throw Error("user not found!");
+
+  const doc = await GetSharedDocument(token!, attestationId);
+
+  const payload = await DecryptPayload(user.key, doc.payload);
+
+  return {
+    attestation_id: doc.attestation_id,
+    document_id: doc.document_id,
+    document_type: doc.document_type,
+    payload: payload && JSON.parse(payload),
+  } as SharedDocument<DriversLicenseType>;
 };
