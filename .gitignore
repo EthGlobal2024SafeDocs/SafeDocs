@@ -1,4 +1,4 @@
 node/jwtKey.key
 share-docs-web/node_modules/
 aws
-tableland
+tableland/node_modules
