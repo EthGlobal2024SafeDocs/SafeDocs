@@ -1,0 +1,63 @@
+{
+  "name": "pwa",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.54.1",
+    "@tanstack/react-router": "^1.52.5",
+    "@uidotdev/usehooks": "^2.4.1",
+    "bn.js": "^5.2.1",
+    "buffer": "^6.0.3",
+    "crypto-js": "^4.2.0",
+    "dayjs": "^1.11.13",
+    "dexie": "^4.0.8",
+    "dexie-react-hooks": "^1.1.7",
+    "elliptic": "^6.5.7",
+    "flowbite-react": "^0.10.1",
+    "js-sha256": "^0.11.0",
+    "path": "^0.12.7",
+    "react": "^18.3.1",
+    "react-cookie": "^7.2.0",
+    "react-dom": "^18.3.1",
+    "react-helmet": "^6.1.0",
+    "react-hook-form": "^7.53.0",
+    "tailwind-merge": "^2.5.2",
+    "viem": "^2.21.1"
+  },
+  "devDependencies": {
+    "@tanstack/react-query-devtools": "4",
+    "@tanstack/router-devtools": "^1.52.5",
+    "@tanstack/router-plugin": "^1.52.0",
+    "@types/node": "^22.5.2",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
+    "@types/react-helmet": "^6.1.11",
+    "@typescript-eslint/eslint-plugin": "^7.8.0",
+    "@typescript-eslint/parser": "^7.8.0",
+    "@vite-pwa/assets-generator": "^0.2.4",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "postcss": "^8.4.44",
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.6.6",
+    "tailwindcss": "^3.4.10",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.10",
+    "vite-plugin-pwa": "^0.20.0",
+    "workbox-core": "^7.1.0"
+  },
+  "resolutions": {
+    "sharp": "0.32.6",
+    "sharp-ico": "0.1.5"
+  }
+}
