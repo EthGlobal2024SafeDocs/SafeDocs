@@ -22,7 +22,14 @@ export default defineConfig({
         name: "SignCast",
         short_name: "SignCast",
         description: "SignCast",
-        theme_color: "#ffffff"
+        theme_color: "#ffffff",
+        icons: [
+          {
+            src: '@/assets/logo.png',
+            sizes: '500x500',
+            type: 'image/png'
+          }
+        ]
       },
 
       workbox: {

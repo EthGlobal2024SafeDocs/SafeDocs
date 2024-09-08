@@ -55,7 +55,7 @@ export function DocumentShareForm({ documentId, setShareOpen, shareOpen }: Props
         </Modal.Body>
         <Modal.Footer>
           <Button form="share-form" type="submit" disabled={isPending}>
-            Share {isPending && <Spinner />}
+            Share {isPending && <Spinner className="ml-2" />}
           </Button>
           <Button color="gray" onClick={() => setShareOpen(false)}>
             Cancel

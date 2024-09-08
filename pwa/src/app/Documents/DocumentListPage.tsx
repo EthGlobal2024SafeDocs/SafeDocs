@@ -13,6 +13,7 @@ export function DocumentsPage() {
     queryKey: ["documents"],
     queryFn: async () => {
       const docs = await getDocuments(context);
+      console.log('docs', docs)
       return docs;
     },
   });
@@ -44,11 +45,11 @@ export function DocumentsPage() {
             <Dropdown.Item as={Link} to="/documents/new">
               Document
             </Dropdown.Item>
-            <Dropdown.Item>Image</Dropdown.Item>
+            <Dropdown.Item as={Link} to="/documents/newImage">Image</Dropdown.Item>
           </Dropdown>
         </div>
 
-        <div className="mt-2">
+        <div className="mt-2 flex flex-col gap-y-4">
           {data?.length <= 0 && <div className="w-full pt-10 text-center">No Documents Exist!</div>}
           {data?.map((d) => d && <DocumentItem key={d._id} {...d} />)}
         </div>

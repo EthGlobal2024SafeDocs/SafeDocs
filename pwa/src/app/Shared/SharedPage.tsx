@@ -3,9 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 
 import { Card } from "flowbite-react";
 
-import { DocumentTypes, getSharedDocument } from "@/services/document";
+import { DocumentTypes, DriversLicenseType, getSharedDocument, ImageType } from "@/services/document";
 import { AwardIcon, BackIcon } from "@/assets/Iconds";
 import { DriversLicenseDisplay } from "../Documents/Operations/DriversLicenseDisplay";
+import { ImageDisplay } from "../Documents/Operations/ImageDisplay";
 
 export function SharedPage() {
   const context = useRouteContext({ from: "__root__" });
@@ -46,7 +47,12 @@ export function SharedPage() {
             </span>
           )}
         </h5>
-        {data && <DriversLicenseDisplay {...data.payload} />}
+        {data?.document_type === DocumentTypes.DriversLicense && (
+          <DriversLicenseDisplay payload={data.payload as DriversLicenseType} />
+        )}
+        {data?.document_type === DocumentTypes.Image && (
+          <ImageDisplay payload={data.payload as ImageType} />
+        )}
       </Card>
     </div>
   );

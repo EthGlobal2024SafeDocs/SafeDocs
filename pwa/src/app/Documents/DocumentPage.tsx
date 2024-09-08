@@ -1,13 +1,13 @@
 import { useRouteContext, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Route } from "@/routes/_auth/documents/$documentId";
-import { Card, Button } from "flowbite-react";
 
 import { useState } from "react";
-import { DocumentTypes, getDocument } from "@/services/document";
+import { Document, DocumentTypes, DriversLicenseType, getDocument, ImageType } from "@/services/document";
 import { DriversLicenseDisplay } from "./Operations/DriversLicenseDisplay";
-import { AwardIcon, BackIcon } from "@/assets/Iconds";
+import { BackIcon } from "@/assets/Iconds";
 import { DocumentShareForm } from "./Operations/DocumentShareForm";
+import { ImageDisplay } from "./Operations/ImageDisplay";
 
 export function DocumentPage() {
   const context = useRouteContext({ from: "__root__" });
@@ -41,21 +41,12 @@ export function DocumentPage() {
         </Link>
         <h3 className="text-xl">Document Details</h3>
       </div>
-      <Card className="max-w-lg">
-        <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-          {data?.document_type === DocumentTypes.DriversLicense && (
-            <span className="flex place-items-center gap-1 text-xs">
-              <AwardIcon /> Drivers License
-            </span>
-          )}
-        </h5>
-        {data && <DriversLicenseDisplay {...data.payload} />}
-        {!isError && (
-          <Button color="blue" onClick={() => setShareOpen(true)}>
-            Share
-          </Button>
-        )}
-      </Card>
+      {data?.document_type === DocumentTypes.DriversLicense && (
+        <DriversLicenseDisplay payload={data.payload as DriversLicenseType} onShareClicked={() => setShareOpen(true)} />
+      )}
+      {data?.document_type === DocumentTypes.Image && (
+        <ImageDisplay payload={data.payload as ImageType} onShareClicked={() => setShareOpen(true)} />
+      )}
       <DocumentShareForm documentId={documentId} shareOpen={shareOpen} setShareOpen={setShareOpen} />
     </div>
   );

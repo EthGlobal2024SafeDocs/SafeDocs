@@ -15,19 +15,16 @@ export function RegisterForm() {
 
   const onSubmit: SubmitHandler<RegisterForm> = async (data) => {
     // todo: register the user to the server and then store it locally
-    const token = await RegisterUserService(data.username, data.email);
+    const { user, token } = await RegisterUserService(data.username, data.email);
 
-    await login!(token);
+    await login!(user, token.token, token.expiryIn);
 
     navigate({ to: "/documents" });
   };
 
   return (
     <div className="mx-auto w-80">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex max-w-md flex-col gap-4"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="flex max-w-md flex-col gap-4">
         <div>
           <div className="mb-2 block">
             <Label htmlFor="username" value="Username" />

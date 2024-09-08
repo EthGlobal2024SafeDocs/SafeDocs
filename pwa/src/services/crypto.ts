@@ -1,15 +1,13 @@
 import { decryptData, encryptData } from "@/lib";
 import Proxy from "@/lib/proxy";
+import { Buffer } from "buffer";
 
 export type EncryptedPayload = {
   key: string;
   cipher: string;
 };
 
-export const DecryptPayload = async (
-  key: string,
-  payload: EncryptedPayload
-) => {
+export const DecryptPayload = async (key: string, payload: EncryptedPayload) => {
   const pk = Proxy.private_key_from_bytes(Proxy.from_hex(key));
   var pri = Proxy.to_hex(pk.to_bytes());
 
@@ -25,10 +23,7 @@ export const EncryptPayload = async (key: string, payload: string) => {
   return encryptData(pubKey, payload) as EncryptedPayload;
 };
 
-export const DecryptPayloadBulk = async (
-  key: string,
-  payloads: Array<{ key: string; payload: EncryptedPayload }>
-) => {
+export const DecryptPayloadBulk = async (key: string, payloads: Array<{ key: string; payload: EncryptedPayload }>) => {
   const pk = Proxy.private_key_from_bytes(Proxy.from_hex(key));
   var pri = Proxy.to_hex(pk.to_bytes());
 
@@ -37,12 +32,15 @@ export const DecryptPayloadBulk = async (
       // decrypt a document
       return {
         key: i.key,
-        payload: decryptData(pri, i.payload) as string
+        payload: decryptData(pri, i.payload) as string,
       };
-    } catch (e) {
-
-    }
+    } catch (e) {}
   });
 
   return result;
+};
+
+export const HexToBase64 = (hex: string) => {
+  const bytes = Proxy.from_hex(hex);
+  return Buffer.from(bytes).toString("base64");
 };

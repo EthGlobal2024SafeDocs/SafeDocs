@@ -1,4 +1,6 @@
 import { DecryptPayload, DecryptPayloadBulk, EncryptPayload } from "./crypto";
+import Proxy from "@/lib/proxy";
+
 import { getUserById } from "./db";
 import {
   AddDocument,
@@ -21,8 +23,14 @@ export type DriversLicenseType = {
   expiryDate: string;
 };
 
+export type ImageType = {
+  imageHex: string;
+  contentType: string;
+};
+
 export enum DocumentTypes {
   DriversLicense = "DriversLicense",
+  Image = "Image",
 }
 
 export type Document<T> = {
@@ -36,7 +44,7 @@ export type SharedDocument<T> = {
   attestation_id: string;
   document_id: string;
   document_type: DocumentTypes;
-  payload: T | "";
+  payload: T;
 };
 
 export const createNewDocument = async (context: RouterContext, type: DocumentTypes, payload: string) => {
@@ -76,6 +84,13 @@ export const getDocuments = async (context: RouterContext) => {
           payload: JSON.parse(i!.payload),
         } as Document<DriversLicenseType>;
       }
+
+      if (doc.document_type === DocumentTypes.Image) {
+        return {
+          ...doc,
+          payload: JSON.parse(i!.payload),
+        } as Document<ImageType>;
+      }
     }
   });
 };
@@ -93,6 +108,13 @@ export const getDocument = async (context: RouterContext, id: string) => {
       ...doc,
       payload: JSON.parse(await DecryptPayload(user.key, doc.payload)),
     } as Document<DriversLicenseType>;
+  }
+
+  if (doc.document_type === DocumentTypes.Image) {
+    return {
+      ...doc,
+      payload: JSON.parse(await DecryptPayload(user.key, doc.payload)),
+    } as Document<ImageType>;
   }
 };
 
@@ -139,6 +161,15 @@ export const getSharedDocuments = async (context: RouterContext) => {
           payload: i!.payload && JSON.parse(i!.payload),
         } as SharedDocument<DriversLicenseType>;
       }
+
+      if (doc.document_type === DocumentTypes.Image) {
+        return {
+          attestation_id: doc.attestation_id,
+          document_id: doc.document_id,
+          document_type: doc.document_type,
+          payload: i!.payload && JSON.parse(i!.payload),
+        } as SharedDocument<ImageType>;
+      }
     }
   });
 };
@@ -154,10 +185,42 @@ export const getSharedDocument = async (context: RouterContext, attestationId: s
 
   const payload = await DecryptPayload(user.key, doc.payload);
 
-  return {
-    attestation_id: doc.attestation_id,
-    document_id: doc.document_id,
-    document_type: doc.document_type,
-    payload: payload && JSON.parse(payload),
-  } as SharedDocument<DriversLicenseType>;
+  if (doc.document_type === DocumentTypes.DriversLicense) {
+    return {
+      attestation_id: doc.attestation_id,
+      document_id: doc.document_id,
+      document_type: doc.document_type,
+      payload: payload && JSON.parse(payload),
+    } as SharedDocument<DriversLicenseType>;
+  }
+
+  if (doc.document_type === DocumentTypes.Image) {
+    return {
+      attestation_id: doc.attestation_id,
+      document_id: doc.document_id,
+      document_type: doc.document_type,
+      payload: payload && JSON.parse(payload),
+    } as SharedDocument<ImageType>;
+  }
+};
+
+export const createNewImageDocument = async (context: RouterContext, image: Int8Array, contentType: string) => {
+  const { userId, token } = context;
+  if (!userId) throw Error("user not logged-in!");
+
+  const user = await getUserById(userId);
+  if (!user) throw Error("user not found!");
+
+  const imageHex = Proxy.to_hex(image);
+
+  const imagePayload: ImageType = {
+    imageHex,
+    contentType,
+  };
+
+  const encrypted = await EncryptPayload(user.key, JSON.stringify(imagePayload));
+
+  const response = await AddDocument(token!, DocumentTypes.Image, encrypted);
+
+  return response;
 };

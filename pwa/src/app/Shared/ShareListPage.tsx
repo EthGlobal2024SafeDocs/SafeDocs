@@ -37,7 +37,7 @@ export function ShareListPage() {
         <title>Shared Documents</title>
       </Helmet>
       <div className="flex flex-col">
-        <div className="mt-2">
+        <div className="mt-2  flex flex-col gap-y-4">
           {data?.length <= 0 && <div className="w-full pt-10 text-center">You Have No Shared Documents!</div>}
           {data?.map((d) => d && <SharedItem key={d.document_id} {...d} />)}
         </div>

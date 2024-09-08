@@ -2,10 +2,8 @@ import { privateKeyToAccount } from "viem/accounts";
 import { addUser, User } from "./db";
 import Proxy from "@/lib/proxy";
 import { toHex, createWalletClient, PrivateKeyAccount, Hex, http } from "viem";
-import { LoginUser, RegisterUser } from "./api";
+import { LoginResponse, LoginUser, RegisterUser } from "./api";
 import { mainnet } from "viem/chains";
-
-
 
 const signMessage = async (user: User) => {
   const pk = Proxy.private_key_from_bytes(Proxy.from_hex(user.key));
@@ -15,7 +13,7 @@ const signMessage = async (user: User) => {
   const wallet = await createWalletClient({
     account,
     chain: mainnet,
-    transport: http()
+    transport: http(),
   });
 
   return await wallet.signMessage({ account, message: user.email });
@@ -28,7 +26,10 @@ export const LoginUserService = async (user: User) => {
   return result;
 };
 
-export const RegisterUserService = async (username: string, email: string) => {
+export const RegisterUserService = async (
+  username: string,
+  email: string,
+): Promise<{ user: User; token: LoginResponse }> => {
   const keys = Proxy.generate_key_pair();
   const pk = keys.get_private_key().to_bytes();
 
@@ -46,7 +47,5 @@ export const RegisterUserService = async (username: string, email: string) => {
 
   const result = await LoginUser(email, signature);
 
-  return result.token;
+  return { user, token: result };
 };
-
-
