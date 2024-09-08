@@ -15,13 +15,13 @@ export default function Header() {
         <>
           <Navbar.Toggle />
           <Navbar.Collapse>
-            <li>
+            <li className="py-1">
               <Link to={"/documents"}> My Documents</Link>
             </li>
-            <li>
+            <li className="py-1">
               <Link to={"/shared"}> Shared</Link>
             </li>
-            <li>
+            <li className="py-1">
               <Button size="xs" color="purple" onClick={logout}>
                 Logout
               </Button>

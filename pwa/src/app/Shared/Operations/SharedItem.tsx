@@ -20,7 +20,7 @@ export const SharedItem = ({ attestation_id, payload }: SharedDocument<DriversLi
         <p className="flex flex-col text-lg font-bold tracking-tight text-gray-900 dark:text-white">
           {isDriverLicense(payload) && (
             <>
-              <span className="flex place-items-center gap-1 text-xs">
+              <span className="flex place-items-center text-xs pb-1">
                 <AwardIcon /> Drivers License
               </span>
               <div>
@@ -32,11 +32,11 @@ export const SharedItem = ({ attestation_id, payload }: SharedDocument<DriversLi
 
           {isImage(payload) && (
             <>
-              <span className="flex place-items-center gap-1 text-xs">
+              <span className="flex place-items-center text-xs pb-1">
                 <AwardIcon /> Image
               </span>
               <div>
-                <img src={`data:${payload.contentType};base64,${HexToBase64(payload.imageHex)}`} />
+                <img src={`data:${payload.contentType};base64,${HexToBase64(payload.imageHex)}`} className="rounded"/>
               </div>
             </>
           )}

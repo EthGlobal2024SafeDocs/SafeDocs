@@ -1,13 +1,14 @@
 import { RouterType } from "@/main";
-import { User } from "@/services/db";
+import { getUserById, User } from "@/services/db";
 import { RouterProvider } from "@tanstack/react-router";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { useCookies, Cookies } from "react-cookie";
 
 export default function AuthProvider({ router }: { router: RouterType }) {
   const [accessToken, setToken] = useState<string>();
   const [userId, setUserId] = useState<number>();
+  const [email, setEmail] = useState<string>();
   const [cookies, setCookie, removeCookie] = useCookies<string>(["token", "user"]);
 
   const handleOnLogin = async (user: User, token: string, expiresIn: number) => {
@@ -22,7 +23,7 @@ export default function AuthProvider({ router }: { router: RouterType }) {
   };
   const handleLogout = async () => {
     console.log("logout called");
-    
+
     setCookie("token", null, { expires: dayjs().add(-1, "M").toDate() });
     setCookie("user", null, { expires: dayjs().add(-1, "M").toDate() });
   };
@@ -31,6 +32,12 @@ export default function AuthProvider({ router }: { router: RouterType }) {
     setToken(cookies["token"]);
     setUserId(cookies["user"]);
   }, [cookies]);
+
+  useEffect(() => {
+    if (userId) {
+      getUserById(userId).then((d) => setEmail(d?.email));
+    }
+  }, [userId]);
 
   useEffect(() => {
     if (accessToken) {
@@ -47,6 +54,7 @@ export default function AuthProvider({ router }: { router: RouterType }) {
         context={{
           userId: userId,
           token: accessToken,
+          userEmail: email,
           login: handleOnLogin,
           logout: handleLogout,
         }}
