@@ -11,6 +11,7 @@ import Document from '../../models/document';
 import Wallet from '../../models/wallet';
 import { Hex } from 'viem';
 import { SendShareEmail } from '../../services/email';
+import { DocumentTypes } from './types';
 
 export type ShareRequest = {
     email: string;
@@ -81,7 +82,7 @@ export const ShareDocumentHandler = async (req: Request, res: Response) => {
 
     const shared = await ShareDocument(
         ownerAddress,
-        document.document_type,
+        DocumentTypes.DriversLicense,
         document._id!.toString(),
         request.proxyKey,
         request.expiry,

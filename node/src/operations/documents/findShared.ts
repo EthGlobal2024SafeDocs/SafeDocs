@@ -58,10 +58,15 @@ export const FindSharedDocumentHandler = async (req: Request, res: Response) => 
         )
         .toArray();
 
+    console.log('all shared', shared);
+
     const docs = await Promise.all(
         documents!.map(async (d) => {
+
             // get the attestation id
-            const latest = _.first(_.sortBy(shared.filter((i) => i.document_id.equals(d._id))));
+            const matched = shared.filter((i) => i.document_id.equals(d._id));
+            console.log('document:', matched);
+            const latest = _.last(_.sortBy(matched, (x) => x.attestation_id));
             if (!latest) return;
 
             const attestation = await GetAttestation(latest.attestation_id);
