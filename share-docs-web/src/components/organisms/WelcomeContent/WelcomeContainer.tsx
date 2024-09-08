@@ -32,7 +32,7 @@ const WelcomeContainer = ({
         >
           Login
         </Button>
-        Or
+        <span className={styles.hideOnSmall}>Or</span>
         <Button
           disabled={PageType.Welcome !== pageType}
           onClick={handleSignUpClick}

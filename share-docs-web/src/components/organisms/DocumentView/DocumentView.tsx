@@ -14,7 +14,7 @@ const DocumentView = ({ document, onCancel }: DocumentViewProps) => {
   console.log('selected document = ', document);
   return (
     <div className={styles.contentWrapper}>
-      <Title label='Add document for sharing' tag='h4' />
+      <Title label='View document for sharing' tag='h4' />
       <Title className={styles.title} label='Document details' tag='h5' />
       <Formik
         initialValues={{

@@ -5,6 +5,7 @@ import { DateTimePicker as MuiDateTimePicker } from '@mui/x-date-pickers/DateTim
 import dayjs from 'dayjs';
 
 import styles from './DateTimePicker.module.css';
+import { useField } from 'formik';
 
 type DateTimePickerProps = {
   name: string;
@@ -12,8 +13,8 @@ type DateTimePickerProps = {
 }
 
 const DateTimePicker = ({ name, onChange }: DateTimePickerProps) => {
+  const [field] = useField(name);
   const handleChange = (value: dayjs.Dayjs | null) => {
-    console.log('datetime = ', value);
     if (value) {
       onChange?.(value);
     }
@@ -22,9 +23,14 @@ const DateTimePicker = ({ name, onChange }: DateTimePickerProps) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className={styles.datetimePickerContainer}>
-      <DemoContainer components={['DateTimePicker']}>
-        <MuiDateTimePicker className={styles.datetimePicker} name={name} label="Expires on" minDate={dayjs()} onChange={handleChange} />
-      </DemoContainer>
+        <MuiDateTimePicker
+          className={styles.datetimePicker}
+          name={name}
+          label="Expires on"
+          value={field.value}
+          minDate={dayjs()}
+          onChange={handleChange}
+        />
       </div>
     </LocalizationProvider>
   );

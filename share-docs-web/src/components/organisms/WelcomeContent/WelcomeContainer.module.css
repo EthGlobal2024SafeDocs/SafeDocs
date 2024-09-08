@@ -1,14 +1,21 @@
 .contentWrapper {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  width: 100%;
+  gap: 24px;
 }
 
 .buttons {
   display: flex;
   flex-direction: row;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  padding: 0 28px;
   gap: 32px;
-  font-weight: 500;
+}
+
+@media ((max-width: 440px)) {
+  .hideOnSmall {
+    display: none;
+  }
 }
