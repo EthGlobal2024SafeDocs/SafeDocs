@@ -14,9 +14,10 @@ import CookieProvider from "./providers/cookie-provider";
 const router = createRouter({
   routeTree,
   context: {
-    isLoggedIn: undefined!,
+    userId: undefined,
+    token: undefined,
     login: undefined!,
-    token: undefined!
+    logout: undefined!
   }
 });
 

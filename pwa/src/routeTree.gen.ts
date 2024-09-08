@@ -15,7 +15,9 @@ import { Route as AuthImport } from './routes/_auth'
 import { Route as Import } from './routes/_'
 import { Route as IndexImport } from './routes/_/index'
 import { Route as RegisterImport } from './routes/_/register'
+import { Route as AuthSharedIndexImport } from './routes/_auth/shared/index'
 import { Route as AuthDocumentsIndexImport } from './routes/_auth/documents/index'
+import { Route as AuthDocumentsNewImport } from './routes/_auth/documents/new'
 import { Route as AuthDocumentsDocumentIdImport } from './routes/_auth/documents/$documentId'
 
 // Create/Update Routes
@@ -40,8 +42,18 @@ const RegisterRoute = RegisterImport.update({
   getParentRoute: () => Route,
 } as any)
 
+const AuthSharedIndexRoute = AuthSharedIndexImport.update({
+  path: '/shared/',
+  getParentRoute: () => AuthRoute,
+} as any)
+
 const AuthDocumentsIndexRoute = AuthDocumentsIndexImport.update({
   path: '/documents/',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthDocumentsNewRoute = AuthDocumentsNewImport.update({
+  path: '/documents/new',
   getParentRoute: () => AuthRoute,
 } as any)
 
@@ -89,11 +101,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthDocumentsDocumentIdImport
       parentRoute: typeof AuthImport
     }
+    '/_auth/documents/new': {
+      id: '/_auth/documents/new'
+      path: '/documents/new'
+      fullPath: '/documents/new'
+      preLoaderRoute: typeof AuthDocumentsNewImport
+      parentRoute: typeof AuthImport
+    }
     '/_auth/documents/': {
       id: '/_auth/documents/'
       path: '/documents'
       fullPath: '/documents'
       preLoaderRoute: typeof AuthDocumentsIndexImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/shared/': {
+      id: '/_auth/shared/'
+      path: '/shared'
+      fullPath: '/shared'
+      preLoaderRoute: typeof AuthSharedIndexImport
       parentRoute: typeof AuthImport
     }
   }
@@ -105,7 +131,9 @@ export const routeTree = rootRoute.addChildren({
   Route: Route.addChildren({ RegisterRoute, IndexRoute }),
   AuthRoute: AuthRoute.addChildren({
     AuthDocumentsDocumentIdRoute,
+    AuthDocumentsNewRoute,
     AuthDocumentsIndexRoute,
+    AuthSharedIndexRoute,
   }),
 })
 
@@ -132,7 +160,9 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "_auth.tsx",
       "children": [
         "/_auth/documents/$documentId",
-        "/_auth/documents/"
+        "/_auth/documents/new",
+        "/_auth/documents/",
+        "/_auth/shared/"
       ]
     },
     "//register": {
@@ -147,8 +177,16 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "_auth/documents/$documentId.tsx",
       "parent": "/_auth"
     },
+    "/_auth/documents/new": {
+      "filePath": "_auth/documents/new.tsx",
+      "parent": "/_auth"
+    },
     "/_auth/documents/": {
       "filePath": "_auth/documents/index.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/shared/": {
+      "filePath": "_auth/shared/index.tsx",
       "parent": "/_auth"
     }
   }

@@ -27,7 +27,15 @@ export const addUser = async (username: string, email: string, key: string) => {
 };
 
 export const getKeyByUsername = async (username: string) => {
-  return await db.users.where("username").equalsIgnoreCase(username).first().then((user) => {
-    return user?.key;
-  });
-}
+  return await db.users
+    .where("username")
+    .equalsIgnoreCase(username)
+    .first()
+    .then((user) => {
+      return user?.key;
+    });
+};
+
+export const getUserById = async (userId: number) => {
+  return await db.users.get(userId);
+};

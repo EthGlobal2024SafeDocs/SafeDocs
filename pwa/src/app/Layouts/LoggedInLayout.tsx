@@ -6,11 +6,14 @@ import Header from "../Header";
 export default function LoggedInLayout() {
   return (
     <>
-      <div className="p-2 flex gap-2">
+      <div className="p-2">
         <Header />
       </div>
       <hr />
-      <Outlet />
+      <main className="container mx-auto px-4 lg:px-0 pt-2">
+        <Outlet />
+      </main>
+
       {/* <ReactQueryDevtools /> */}
       <TanStackRouterDevtools />
     </>

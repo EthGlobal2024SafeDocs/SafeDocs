@@ -3,8 +3,7 @@ import { Button, Label, TextInput } from "flowbite-react";
 import { getUserByUsername } from "@/services/db";
 import { useMutation } from "@tanstack/react-query";
 import { LoginUserService } from "@/services/user";
-import { useNavigate, useRouteContext } from "@tanstack/react-router";
-
+import { useRouteContext } from "@tanstack/react-router";
 
 type LoginForm = {
   username: string;
@@ -12,8 +11,7 @@ type LoginForm = {
 
 export function LoginForm() {
   const { register, handleSubmit } = useForm<LoginForm>();
-  const { login } = useRouteContext({ from:'__root__' });
-  const navigate = useNavigate();
+  const { login } = useRouteContext({ from: "__root__" });
 
   const { mutate } = useMutation({
     mutationKey: ["login"],
@@ -21,12 +19,9 @@ export function LoginForm() {
       // todo: check if the user existing in browser database
       const user = await getUserByUsername(username);
       if (user) {
-        
         const token = await LoginUserService(user);
         console.log("token", token);
-        await login(token.token, token.expiryIn);
-
-        
+        await login(user, token.token, token.expiryIn);
       } else {
         console.log("no user found");
         throw Error("user does not exist!");

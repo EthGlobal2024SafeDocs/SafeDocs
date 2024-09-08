@@ -1,8 +1,10 @@
+import { User } from "@/services/db";
 import { createRootRouteWithContext } from "@tanstack/react-router";
 
 export interface RouterContext {
   token?: string;
-  login: (token: string, expiresIn: number) => Promise<void>;
+  userId?: number;
+  login: (user: User, token: string, expiresIn: number) => Promise<void>;
   logout: () => Promise<void>;
 }
 

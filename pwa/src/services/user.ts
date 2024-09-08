@@ -1,15 +1,11 @@
 import { privateKeyToAccount } from "viem/accounts";
 import { addUser, User } from "./db";
 import Proxy from "@/lib/proxy";
-import { decryptData } from "@/lib/index";
 import { toHex, createWalletClient, PrivateKeyAccount, Hex, http } from "viem";
 import { LoginUser, RegisterUser } from "./api";
 import { mainnet } from "viem/chains";
 
-type EncryptedPayload = {
-  key: string;
-  cipher: string;
-};
+
 
 const signMessage = async (user: User) => {
   const pk = Proxy.private_key_from_bytes(Proxy.from_hex(user.key));
@@ -53,16 +49,4 @@ export const RegisterUserService = async (username: string, email: string) => {
   return result.token;
 };
 
-export const DecryptPayload = async (
-  payload: EncryptedPayload,
-  key: string
-) => {
-  const pk = Proxy.private_key_from_bytes(Proxy.from_hex(key));
-  var pri = Proxy.to_hex(pk.to_bytes());
-  console.log(pri);
-  console.log(payload);
-  const decryptedData: string = decryptData(pri, payload);
-  console.log("decrypted payload:", JSON.parse(decryptedData));
 
-  return decryptedData;
-};
