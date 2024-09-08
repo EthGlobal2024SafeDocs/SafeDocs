@@ -2,7 +2,7 @@
   display: flex;
   border-radius: 8px;
   background-color: white;
-  width: 350px;
+  width: 272px;
   margin-left: 138px;
 }
 
@@ -10,5 +10,12 @@
   display: flex;
   border-radius: 8px;
   background-color: white;
-  width: 350px;
+  width: 100%;
+  margin-top: 10px !important;
+}
+
+@media ((max-width: 440px)) {
+  .datetimePickerContainer {
+    margin-left: auto;
+  }
 }

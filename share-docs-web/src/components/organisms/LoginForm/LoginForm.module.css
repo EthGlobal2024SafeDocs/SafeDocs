@@ -1,13 +1,14 @@
 .loginFormWrapper {
   display: flex;
   flex-direction: column;
-  width: 580px;
+  width: 100%;
   gap: 24px;
 }
 
 .loginForm {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   gap: 16px;
 }
 
@@ -20,4 +21,11 @@
   flex-direction: row;
   justify-content: space-between;
   padding: 0 28px;
+  gap: 32px;
+}
+
+@media ((max-width: 500px)) {
+  .buttons {
+    gap: 32px;
+  }
 }

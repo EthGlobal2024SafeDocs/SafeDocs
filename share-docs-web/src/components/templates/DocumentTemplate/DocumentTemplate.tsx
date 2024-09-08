@@ -1,21 +1,21 @@
-import { useNavigate } from "react-router-dom";
-import DocumentShare from "../../organisms/DocumentShare/DocumentShare";
-import { useAppStore } from "../../../store/useAppStore";
-import { useDocumentStore } from "../../../store/useDocumentStore";
-import { DocumentPageType } from "../../../shared/types/components";
-import DocumentAdd from "../../organisms/DocumentAdd/DocumentAdd";
-import { createDocument } from "../../../services/createDocumentService";
-import { useContext, useState } from "react";
-import { AuthContext } from "../../../context/AuthContext";
-import { UserDocument } from "../../../models/api/document";
-import DialogModal from "../../organisms/DialogModal/DialogModal";
-import DocumentView from "../../organisms/DocumentView/DocumentView";
-import { getDecryptedPayload } from "../../../services/web3Services";
+import { useNavigate } from 'react-router-dom';
+import DocumentShare from '../../organisms/DocumentShare/DocumentShare';
+import { useAppStore } from '../../../store/useAppStore';
+import { useDocumentStore } from '../../../store/useDocumentStore';
+import { DocumentPageType } from '../../../shared/types/components';
+import DocumentAdd from '../../organisms/DocumentAdd/DocumentAdd';
+import { createDocument } from '../../../services/createDocumentService';
+import { useContext, useState } from 'react';
+import { AuthContext } from '../../../context/AuthContext';
+import { UserDocument } from '../../../models/api/document';
+import DialogModal from '../../organisms/DialogModal/DialogModal';
+import DocumentView from '../../organisms/DocumentView/DocumentView';
+import { getDecryptedPayload } from '../../../services/web3Services';
 import {
   ShareDocumentRequest,
   shareDocument
-} from "../../../services/shareDocumentService";
-import dayjs from "dayjs";
+} from '../../../services/shareDocumentService';
+import dayjs from 'dayjs';
 
 const DocumentTemplate = () => {
   const { user } = useAppStore();
@@ -25,13 +25,13 @@ const DocumentTemplate = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [dialogTitle, setDialogTitle] = useState<string | undefined>();
-  const [dialogText, setDialogText] = useState<string>("");
+  const [dialogText, setDialogText] = useState<string>('');
   const [hasErrors, setHasErrors] = useState<boolean>(false);
 
   const onDialogClosed = () => {
     setIsOpen(false);
     if (!hasErrors) {
-      navigate("/user");
+      navigate('/user');
     }
   };
 
@@ -42,90 +42,104 @@ const DocumentTemplate = () => {
   };
 
   const onShare = async (email: string, expires: dayjs.Dayjs | null) => {
-    const token = authContext?.authState?.token ?? "";
+    const token = authContext?.authState?.token ?? '';
     if (
       token.length === 0 ||
       !user.skey ||
       !selectedDocument ||
       expires === null
     ) {
-      navigate("/");
+      authContext?.logout();
+      // navigate('/');
       return;
     }
     const request: ShareDocumentRequest = {
       token,
-      documentId: selectedDocument._id?.toString() ?? "",
-      priKey: user.skey, //user.sk_acc,
+      documentId: selectedDocument._id?.toString() ?? '',
+      priKey: user.skey,
       email,
       expiresIn: expires.unix()
-    };
-
+    }
     const result = await shareDocument(request);
     if (result) {
       setHasErrors(false);
-      showDialog("Document Shared", "Document shared successfully.");
+      showDialog('Document Shared', 'Document shared successfully.');
     } else {
       setHasErrors(true);
       showDialog(
-        "Share Document Error",
-        "Could not share document. Please try again."
+        'Share Document Error',
+        'Could not share document. Please try again.'
       );
     }
   };
 
   const doDecrypt = (): string | undefined => {
-    if (!user.pkey) {
-      navigate("/user");
+    if (!user.skey) {
+      navigate('/user');
       return;
     }
     const documentToDecrypt = selectedDocument
       ? selectedDocument
       : selectedSharedDocument
-      ? selectedSharedDocument
-      : undefined;
+        ? selectedSharedDocument
+        : undefined;
     if (!documentToDecrypt) {
       return undefined;
     }
-    // TODO: need to uncomment decrypt once we solved encryption issue
-    const userDocument = documentToDecrypt; //getDecryptedPayload(user.pkey, documentToDecrypt.payload);
-    return JSON.stringify(userDocument);
+    if (hasErrors) {
+      navigate('/user');
+      return;
+    }
+    if (documentPageType === DocumentPageType.View) {
+      try {
+        const userDocument = getDecryptedPayload(user.skey, documentToDecrypt.payload);
+        return JSON.stringify(userDocument);
+      } catch (error) {
+        console.log('Decrypt Error = ', error);
+        setHasErrors(true);
+        showDialog(
+          'View Document',
+          'Could not view the document. The document may be corrupted.'
+        );
+      }
+    }
+    return undefined;
   };
 
   const decryptedDocument = doDecrypt();
 
   const onAdd = async (payload: string) => {
-    console.log("Adding document with payload: ", payload);
-    const token = authContext?.authState?.token ?? "";
+    const token = authContext?.authState?.token ?? '';
     if (token.length === 0 || !user.pkey) {
-      navigate("/");
+      authContext?.logout();
+      // navigate('/');
       return;
     }
     try {
       const payloadAsDocument: UserDocument = JSON.parse(payload);
       const result = await createDocument(token, user.pkey, payloadAsDocument);
-      console.log("Document created = ", result);
       if (!result) {
         setHasErrors(true);
         showDialog(
-          "Adding Document",
-          "Could not add document. Please try again."
+          'Adding Document',
+          'Could not add document. Please try again.'
         );
       } else {
         setHasErrors(false);
-        showDialog("Document Added", "Document added successfully.");
+        showDialog('Document Added', 'Document added successfully.');
       }
     } catch (error) {
-      console.log("Error = ", error);
+      console.log('Error = ', error);
       setHasErrors(true);
       showDialog(
-        "Adding Document",
-        "Could not add document. Please try again."
+        'Adding Document',
+        'Could not add document. Please try again.'
       );
     }
   };
 
   const onCancel = () => {
-    navigate("/user");
+    navigate('/user');
   };
 
   return (

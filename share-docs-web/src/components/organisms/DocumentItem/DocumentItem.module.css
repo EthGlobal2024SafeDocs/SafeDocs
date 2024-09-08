@@ -3,4 +3,22 @@
   justify-content: space-between;
   flex-direction: row;
   width: 100%;
+  border-bottom: 1px solid rgb(236, 217, 217);
+  padding: 8px 0;
+}
+
+.buttons {
+  display: flex;
+  gap: 16px;
+}
+
+@media ((max-width: 420px)) {
+  .item {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .buttons {
+    justify-content: end;
+  }
 }
